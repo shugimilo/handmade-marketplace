@@ -1,0 +1,143 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------- Models ----------------------
+
+model User {
+  id                Int               @id @default(autoincrement())
+  email             String            @unique
+  username          String            @unique
+  password          String
+  createdAt         DateTime          @default(now())
+  isAdmin           Boolean           @default(false)
+  items             Item[]
+  buyerOrders       Order[]           @relation("BuyerOrders")
+  sellerOrders      Order[]           @relation("SellerOrders")
+  favorites         Favorite[]        @relation("UserFavorites")
+  reviews           Review[]          @relation("UserReviews")
+  carts             Cart[]
+  shippingAddresses ShippingAddress[]
+}
+
+model Item {
+  id                Int          @id @default(autoincrement())
+  name              String
+  description       String
+  price             Float
+  currency          String       @default("RSD")
+  author            User         @relation(fields: [authorId], references: [id])
+  authorId          Int
+  categories        Category[]
+  pickupAvailable   Boolean
+  deliveryAvailable Boolean
+  favoritedBy       Favorite[]  @relation("FavoritedBy")
+  reviews           Review[]    @relation("ItemReviews")
+  itemImages        ItemImage[]
+  cartItems         CartItem[]
+  orderItems        OrderItem[]
+}
+
+model ItemImage {
+  id     Int     @id @default(autoincrement())
+  url    String
+  label  String?
+  item   Item    @relation(fields: [itemId], references: [id])
+  itemId Int
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  items Item[]
+}
+
+model Favorite {
+  id     Int  @id @default(autoincrement())
+  user   User @relation("UserFavorites", fields: [userId], references: [id])
+  userId Int
+  item   Item @relation("FavoritedBy", fields: [itemId], references: [id])
+  itemId Int
+
+  // Composite unique constraint to stop the same user-item pair from reappearing
+  @@unique([userId, itemId])
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  item       Item     @relation("ItemReviews", fields: [itemId], references: [id])
+  itemId     Int
+  reviewer   User     @relation("UserReviews", fields: [reviewerId], references: [id])
+  reviewerId Int
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now())
+}
+
+model Cart {
+  id     Int        @id @default(autoincrement())
+  user   User       @relation(fields: [userId], references: [id])
+  userId Int
+  items  CartItem[]
+}
+
+model CartItem {
+  id       Int  @id @default(autoincrement())
+  cart     Cart @relation(fields: [cartId], references: [id])
+  cartId   Int
+  item     Item @relation(fields: [itemId], references: [id])
+  itemId   Int
+  quantity Int  @default(1)
+
+  @@unique([cartId, itemId])
+}
+
+model Order {
+  id       Int         @id @default(autoincrement())
+  buyer    User        @relation("BuyerOrders", fields: [buyerId], references: [id])
+  buyerId  Int
+  seller   User        @relation("SellerOrders", fields: [sellerId], references: [id])
+  sellerId Int
+  placedAt DateTime    @default(now())
+  items    OrderItem[]
+  total    Float
+  payments Payment[]
+}
+
+model OrderItem {
+  id                 Int    @id @default(autoincrement())
+  order              Order  @relation(fields: [orderId], references: [id])
+  orderId            Int
+  item               Item   @relation(fields: [itemId], references: [id])
+  itemId             Int
+  priceAtPurchase    Float
+  currencyAtPurchase String @default("RSD")
+  quantity           Int    @default(1)
+}
+
+model ShippingAddress {
+  id           Int    @id @default(autoincrement())
+  user         User   @relation(fields: [userId], references: [id])
+  userId       Int
+  street       String
+  houseNo      String
+  neighborhood String
+  city         String @default("Kragujevac")
+}
+
+model Payment {
+  id      Int    @id @default(autoincrement())
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId Int
+  status  String
+}
