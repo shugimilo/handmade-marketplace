@@ -1,0 +1,26 @@
+### Registration test
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "username": "shugimilo",
+    "password": "bratshugi5",
+    "email": "pimidim2@gmail.com"
+}
+
+### Login test
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "pimidim2@gmail.com",
+    "password": "bratshugi5"
+}
+
+### Fetch all users
+GET http://localhost:3000/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcyODUxMDg3LCJleHAiOjE3NzI5Mzc0ODd9.FyMRfXzVRElZbrgIzPWt6Nzx2xoYBsI4J5dyow0Bvso
+
+### Fetch the first user
+GET http://localhost:3000/api/users/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcyODUxNDc2LCJleHAiOjE3NzI5Mzc4NzZ9.p6PBUhyyP1xqi39kidL7KExyyUTfbXvMS0YrsFVl8SQ
