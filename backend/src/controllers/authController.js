@@ -35,7 +35,7 @@ export async function register(req, res) {
             }
         })
 
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '24h' })
+        const token = jwt.sign({ id: user.id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '24h' })
         res.json({ 
             token,
             "user": {
@@ -69,7 +69,7 @@ export async function login(req, res) {
             return res.status(400).json({ error: "Invalid password" })
         }
 
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '24h' })
+        const token = jwt.sign({ id: user.id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '24h' })
         res.json({
             token,
             "user": {

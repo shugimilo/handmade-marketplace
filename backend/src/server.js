@@ -2,7 +2,7 @@ import express from 'express';
 import '../config.js';
 import authRoutes from './routes/authRoutes.js';
 import apiRoutes from './routes/apiRoutes.js';
-import authMiddleware from './middleware/authMiddleware.js';
+import authMiddleware from './middleware/authenticationMiddleware.js';
 
 const PORT = process.env.SERVER_PORT || 3000;
 
@@ -11,11 +11,12 @@ const app = express()
 // ----------- MIDDLEWARE -----------
 
 app.use(express.json())
+app.use('/uploads', express.static('src/public/uploads'))
 
 // ----------- ROUTES -----------
 
 app.use('/auth', authRoutes)
-app.use('/api', authMiddleware, apiRoutes)
+app.use('/api', apiRoutes)
 
 // ----------- FINAL FUNCTION CALL -----------
 
