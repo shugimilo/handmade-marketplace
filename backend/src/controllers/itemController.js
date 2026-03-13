@@ -1,3 +1,4 @@
+import { basicItemInfo } from '../../prisma/selects/basic.select.js'
 import prisma from '../prismaClient.js'
 
 export async function createItem(req, res) {
@@ -20,19 +21,21 @@ export async function createItem(req, res) {
 
         res.json({ item })
     } catch (err) {
-        res.status(500).json({ message: `Server error: ${err.message}` })
+        res.status(500).json({ message: err.message })
     }
 }
 
-export async function getItems(req, res) {
+export async function getAllItems(req, res) {
     try {
-        const items = await prisma.item.findMany()
+        const items = await prisma.item.findMany({
+            select: basicItemInfo
+        })
 
         if (items.length === 0) return res.status(400).json({ message: "There are no items" })
 
         res.json({ items })
     } catch (err) {
-        res.status(500).json({ message: `Server error: ${err.message}`} )
+        res.status(500).json({ message: err.message} )
     }
 }
 
@@ -48,13 +51,13 @@ export async function getItemById(req, res) {
 
         res.json({ item })
     } catch (err) {
-        return res.status(500).json({ message: `Server error: ${err.message}` })
+        return res.status(500).json({ message: err.message })
     }
 }
 
 export async function updateItem(req, res) {
     const id = Number(req.params.id)
-    const { name, description, price, pickupAvailable, deliveryAvailable } = req.body
+    const { name, description, price, currency, pickupAvailable, deliveryAvailable } = req.body
 
     if (!id) return res.status(400).json({ message: "Item not found" })
 
@@ -65,6 +68,7 @@ export async function updateItem(req, res) {
                 name,
                 description,
                 price,
+                currency,
                 pickupAvailable,
                 deliveryAvailable
             }
@@ -72,7 +76,7 @@ export async function updateItem(req, res) {
 
         res.json({ updatedItem })
     } catch (err) {
-        res.status(500).json({ message: `Server error: ${err.message}` })
+        res.status(500).json({ message: err.message })
     }
 }
 
@@ -86,6 +90,22 @@ export async function deleteItem(req, res) {
 
         res.json({ deletedItem })
     } catch (err) {
-        res.status(500).json({ message: `Server error: ${err.message}` })
+        res.status(500).json({ message: err.message })
     }
 }
+
+export async function getItemsByUserId(req, res) {
+    const authorId = Number(req.params.id)
+
+    try {
+        const userItems = await prisma.items.findMany({
+            where: { authorId }
+        })
+
+        if (userItems.length === 0) return res.status(404).json({ message: "User has no items" })
+
+        res.json({ userItems })
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
+}   

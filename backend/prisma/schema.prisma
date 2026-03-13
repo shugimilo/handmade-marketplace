@@ -23,6 +23,7 @@ model User {
   lastName          String?
   createdAt         DateTime          @default(now())
   isAdmin           Boolean           @default(false)
+  bio               String?
   pfpUrl            String?
   items             Item[]
   buyerOrders       Order[]           @relation("BuyerOrders")
@@ -66,25 +67,26 @@ model Category {
 }
 
 model Favorite {
-  id     Int  @id @default(autoincrement())
-  user   User @relation("UserFavorites", fields: [userId], references: [id])
-  userId Int
-  item   Item @relation("FavoritedBy", fields: [itemId], references: [id])
-  itemId Int
+  id          Int      @id @default(autoincrement())
+  user        User     @relation("UserFavorites", fields: [userId], references: [id])
+  userId      Int
+  item        Item     @relation("FavoritedBy", fields: [itemId], references: [id])
+  itemId      Int
+  favoritedOn DateTime @default(now())
 
   // Composite unique constraint to stop the same user-item pair from reappearing
   @@unique([userId, itemId])
 }
 
 model Review {
-  id         Int      @id @default(autoincrement())
-  item       Item     @relation("ItemReviews", fields: [itemId], references: [id])
-  itemId     Int
-  reviewer   User     @relation("UserReviews", fields: [reviewerId], references: [id])
-  reviewerId Int
-  rating     Int
-  comment    String?
-  createdAt  DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  item        Item     @relation("ItemReviews", fields: [itemId], references: [id])
+  itemId      Int
+  reviewer    User     @relation("UserReviews", fields: [reviewerId], references: [id])
+  reviewerId  Int
+  rating      Int
+  comment     String?
+  reviewedOn  DateTime @default(now())
 }
 
 model Cart {
@@ -106,15 +108,17 @@ model CartItem {
 }
 
 model Order {
-  id       Int         @id @default(autoincrement())
-  buyer    User        @relation("BuyerOrders", fields: [buyerId], references: [id])
-  buyerId  Int
-  seller   User        @relation("SellerOrders", fields: [sellerId], references: [id])
-  sellerId Int
-  placedAt DateTime    @default(now())
-  items    OrderItem[]
-  total    Float
-  payments Payment[]
+  id        Int             @id @default(autoincrement())
+  buyer     User            @relation("BuyerOrders", fields: [buyerId], references: [id])
+  buyerId   Int
+  seller    User            @relation("SellerOrders", fields: [sellerId], references: [id])
+  sellerId  Int
+  placedAt  DateTime        @default(now())
+  items     OrderItem[]
+  total     Float
+  payments  Payment[]
+  addressId Int
+  shipTo    ShippingAddress @relation("OrdersShippedToAddress", fields: [addressId], references: [id])
 }
 
 model OrderItem {
@@ -129,13 +133,14 @@ model OrderItem {
 }
 
 model ShippingAddress {
-  id           Int    @id @default(autoincrement())
-  user         User   @relation(fields: [userId], references: [id])
-  userId       Int
-  street       String
-  houseNo      String
-  neighborhood String
-  city         String @default("Kragujevac")
+  id            Int     @id @default(autoincrement())
+  user          User    @relation(fields: [userId], references: [id])
+  userId        Int
+  street        String
+  houseNo       String
+  neighborhood  String
+  city          String  @default("Kragujevac")
+  ordersShipped Order[] @relation("OrdersShippedToAddress")
 }
 
 model Payment {

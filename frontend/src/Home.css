@@ -1,0 +1,89 @@
+/* ---------- Hero section ---------- */
+
+.hero {
+  height: 70vh;
+
+  background-image:
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url("/hero.jpg");
+
+  background-size: contain;
+  background-position: center;
+
+  display: flex;
+  align-items: center;
+
+  color: white;
+}
+
+.hero-content {
+  max-width: 600px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  margin-bottom: 25px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.hero-buttons button.secondary {
+  background: transparent;
+  border: 1px solid white;
+}
+
+/* ---------- Category section ---------- */
+
+.categories {
+  padding: 60px 0;
+}
+
+.category-grid {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.category-card {
+  flex: 1;
+  padding: 40px;
+  background: #f5f5f5;
+  text-align: center;
+}
+
+/* ---------- Featured section ---------- */
+
+.featured {
+  padding: 60px 0;
+}
+
+.product-grid {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.product-card {
+  flex: 1;
+  padding: 40px;
+  background: #f0f0f0;
+}
+
+/* ---------- Discover button ---------- */
+
+.discover-more {
+  text-align: center;
+  padding: 40px 0 60px;
+}
+
+.discover-button {
+  padding: 12px 24px;
+  font-size: 1rem;
+}
