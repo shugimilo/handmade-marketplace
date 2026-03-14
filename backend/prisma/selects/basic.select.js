@@ -25,3 +25,46 @@ export const basicItemInfo = {
         }
     }
 }
+
+export const basicOrderInfo = {
+    id: true,
+    placedAt: true,
+    total: true,
+    payments: {
+        select: {
+            id: true,
+            status: true
+        }
+    },
+    addressId: true,
+    shipTo: {
+        select: {
+            id: true,
+            street: true,
+            houseNo: true,
+            neighborhood: true,
+            city: true
+        }
+    }
+}
+
+export const basicShippingAddressInfo = {
+    street: true,
+    houseNo: true,
+    neighborhood: true,
+    city: true
+}
+
+export const basicCartInfo = {
+    id: true,
+    cartItems: {
+        select: {
+            id: true,
+            itemId: true,
+            quantity: true,
+            item: {
+                select: basicItemInfo
+            }
+        }
+    }
+}

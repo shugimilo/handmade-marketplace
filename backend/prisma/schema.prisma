@@ -27,7 +27,6 @@ model User {
   pfpUrl            String?
   items             Item[]
   buyerOrders       Order[]           @relation("BuyerOrders")
-  sellerOrders      Order[]           @relation("SellerOrders")
   favorites         Favorite[]        @relation("UserFavorites")
   reviews           Review[]          @relation("UserReviews")
   carts             Cart[]
@@ -87,13 +86,15 @@ model Review {
   rating      Int
   comment     String?
   reviewedOn  DateTime @default(now())
+
+  @@unique([reviewerId, itemId])
 }
 
 model Cart {
   id     Int        @id @default(autoincrement())
   user   User       @relation(fields: [userId], references: [id])
   userId Int
-  items  CartItem[]
+  cartItems  CartItem[]
 }
 
 model CartItem {
@@ -108,17 +109,16 @@ model CartItem {
 }
 
 model Order {
-  id        Int             @id @default(autoincrement())
-  buyer     User            @relation("BuyerOrders", fields: [buyerId], references: [id])
-  buyerId   Int
-  seller    User            @relation("SellerOrders", fields: [sellerId], references: [id])
-  sellerId  Int
-  placedAt  DateTime        @default(now())
-  items     OrderItem[]
-  total     Float
-  payments  Payment[]
-  addressId Int
-  shipTo    ShippingAddress @relation("OrdersShippedToAddress", fields: [addressId], references: [id])
+  id             Int             @id @default(autoincrement())
+  buyer          User            @relation("BuyerOrders", fields: [buyerId], references: [id])
+  buyerId        Int
+  placedAt       DateTime        @default(now())
+  orderItems     OrderItem[]
+  total          Float
+  payments       Payment[]
+  addressId      Int
+  shipTo         ShippingAddress @relation("OrderedToAddress", fields: [addressId], references: [id])
+  status         String
 }
 
 model OrderItem {
@@ -140,7 +140,7 @@ model ShippingAddress {
   houseNo       String
   neighborhood  String
   city          String  @default("Kragujevac")
-  ordersShipped Order[] @relation("OrdersShippedToAddress")
+  orders Order[] @relation("OrderedToAddress")
 }
 
 model Payment {

@@ -1,47 +1,130 @@
+import { basicItemInfo } from '../../prisma/selects/basic.select.js'
+import { userAsBuyerOrderInfo, userAsSellerOrderInfo } from '../../prisma/selects/order.select.js'
 import prisma from '../prismaClient.js'
 
 export async function createOrder(req, res) {
-    const { buyerId, sellerId, total } = req.body
+    const userId = Number(req.userId)
+    const addressId = Number(req.body.id)
 
     try {
-        const order = await prisma.order.create({
-            data: {
-                buyerId,
-                sellerId,
-                total
+
+        const cart = await prisma.cart.findFirst({
+            where: { userId },
+            select: {
+                id: true,
+                cartItems: {
+                    select: {
+                        itemId: true,
+                        quantity: true,
+                        item: {
+                            select: {
+                                ...basicItemInfo,
+                                authorId: true
+                            }
+                        }
+                    }
+                }
             }
         })
 
-        res.json({ order })
-    } catch (err) {
-        return res.status(500).json({ message: `Server error: ${err.message}` })
-    }
-}
+        if (!cart || cart.cartItems.length === 0) {
+            return res.status(400).json({ message: "Cart is empty" })
+        }
 
-export async function getOrders(req, res) {
-    try {
-        const orders = await prisma.order.findMany()
+        // GROUP ITEMS BY SELLER
+        const itemsBySeller = {}
 
-        if (orders.length === 0) return res.status(404).json({ message: "No orders found" })
+        for (const ci of cart.cartItems) {
+            const sellerId = ci.item.authorId
 
-        res.json({ orders })
-    } catch (err) {
-        return res.status(500).json({ message: `Server error: ${err.message}` })
-    }
-}
+            if (!itemsBySeller[sellerId]) {
+                itemsBySeller[sellerId] = []
+            }
 
-export async function getOrderById(req, res) {
-    const orderId = Number(req.params.id)
+            itemsBySeller[sellerId].push(ci)
+        }
 
-    if (!orderId) return res.status(400).json({ message: "Order id not provided" })
+        const orders = await prisma.$transaction(async (tx) => {
 
-    try {
-        const order = await prisma.order.findUnique({
-            where: { orderId }
+            const createdOrders = []
+
+            for (const sellerId in itemsBySeller) {
+
+                const sellerItems = itemsBySeller[sellerId]
+
+                const total = sellerItems.reduce(
+                    (sum, ci) => sum + ci.item.price * ci.quantity,
+                    0
+                )
+
+                const order = await tx.order.create({
+                    data: {
+                        buyerId: userId,
+                        addressId,
+                        total,
+                        status: "Created",
+                        orderItems: {
+                            create: sellerItems.map(ci => ({
+                                itemId: ci.itemId,
+                                priceAtPurchase: ci.item.price,
+                                currencyAtPurchase: ci.item.currency,
+                                quantity: ci.quantity
+                            }))
+                        }
+                    }
+                })
+
+                createdOrders.push(order)
+            }
+
+            // CLEAR CART
+            await tx.cartItem.deleteMany({
+                where: { cartId: cart.id }
+            })
+
+            return createdOrders
         })
 
-        if (!order) return res.status(404).json({ message: "Order with provided id not found" })
+        res.json({ orders })
+
     } catch (err) {
-        return res.status(500).json({ message: `Server error: ${err.message}` })        
+        res.status(500).json({ message: err.message })
+    }
+}
+
+export async function getUserBuyerOrders(req, res) {
+    const userId = Number(req.userId)
+
+    try {
+        const buyerOrders = await prisma.order.findMany({
+            where: { buyerId: userId },
+            select: userAsBuyerOrderInfo
+        })
+
+        res.json({ buyerOrders })
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
+}
+
+export async function getUserSellerOrders(req, res) {
+    const userId = Number(req.userId)
+
+    try {
+        const sellerOrders = await prisma.order.findMany({
+            where: {
+                orderItems: {
+                    some: {
+                        item: {
+                            authorId: userId
+                        }
+                    }
+                }
+            },
+            select: userAsSellerOrderInfo
+        })
+        res.json({ sellerOrders })
+    } catch (err) {
+        res.status(500).json({ message: err.message })
     }
 }

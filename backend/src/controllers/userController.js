@@ -2,7 +2,7 @@ import { basicUserInfo } from '../../prisma/selects/basic.select.js'
 import { currentUser, publicUserProfile } from '../../prisma/selects/user.select.js'
 import prisma from '../prismaClient.js'
 
-// For simple profile displays, e.g. above reviews
+// For simple profile displays, e.g. above reviews & item containers etc.
 
 export async function getBasicUserInfo(req, res) {
     const id = Number(req.params.id)

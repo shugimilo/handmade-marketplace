@@ -1,5 +1,4 @@
-import { basicItemInfo, basicUserInfo } from "./basic.select.js"
-import { userAsBuyerOrderInfo, userAsSellerOrderInfo } from "./order.select.js"
+import { basicItemInfo, basicShippingAddressInfo, basicUserInfo } from "./basic.select.js"
 
 export const publicUserProfile = {
     id: true,
@@ -15,11 +14,13 @@ export const publicUserProfile = {
     reviews: {
         select: {
             id: true,
+            itemId: true,
+            item: {
+                select: basicItemInfo
+            },
+            rating: true,
             comment: true,
-            reviewedOn: true,
-            reviewer: {
-                select: basicUserInfo
-            }
+            reviewedOn: true
         }
     }
 }
@@ -35,12 +36,6 @@ export const currentUser = {
     pfpUrl: true,
     items: {
         select: basicItemInfo
-    },
-    buyerOrders: {
-        select: userAsBuyerOrderInfo
-    },
-    sellerOrders: {
-        select: userAsSellerOrderInfo
     },
     favorites: {
         select: {
@@ -65,19 +60,7 @@ export const currentUser = {
             reviewedOn: true
         }
     },
-    carts: {
-        select: {
-            id: true,
-            items: {
-                select: {
-                    id: true,
-                    quantity: true,
-                    item: {
-                        select: basicItemInfo
-                    }
-                }
-            }
-        }
-    },
-    shippingAddresses: true
+    shippingAddresses: {
+        select: basicShippingAddressInfo
+    }
 }
