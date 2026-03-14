@@ -2,7 +2,8 @@ import prisma from '../prismaClient.js'
 
 export async function createReview(req, res) {
     const userId = Number(req.userId)
-    const { itemId, rating, comment } = req.body
+    const { rating, comment } = req.body
+    const itemId = Number(req.params.id)
 
     if (rating < 1 || rating > 5) {
         return res.status(400).json({ message: "Rating must be between 1 and 5" })

@@ -41,16 +41,23 @@ export async function getAllItems(req, res) {
 }
 
 export async function getItemById(req, res) {
-    const userId = Number(req.userId)
-    const { id, authorId } = req.body
+    const id = Number(req.params.id)
+    const userId = req.userId ? Number(req.userId) : null
 
     try {
-        const item = await prisma.item.findUnique({
+        const existingItem = await prisma.item.findUnique({
             where: { id },
-            select: authorId == userId ? itemOwnerView : publicItemView
+            select: { authorId: true }
         })
 
-        if (!item) return res.status(400).json({ message: "No item found" })
+        if (!existingItem) {
+            return res.status(404).json({ message: "No item found" })
+        }
+
+        const item = await prisma.item.findUnique({
+            where: { id },
+            select: existingItem.authorId === userId ? itemOwnerView : publicItemView
+        })
 
         res.json({ item })
     } catch (err) {
@@ -62,7 +69,7 @@ export async function getItemsByUserId(req, res) {
     const authorId = Number(req.params.id)
 
     try {
-        const userItems = await prisma.items.findMany({
+        const userItems = await prisma.item.findMany({
             where: { authorId },
             select: basicItemInfo
         })
@@ -92,7 +99,7 @@ export async function updateItem(req, res) {
                 pickupAvailable,
                 deliveryAvailable,
                 categories: {
-                    connect: categories.map(id => ({ id }))
+                    set: categories.map(id => ({ id }))
                 }
             }
         })

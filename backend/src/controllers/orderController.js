@@ -4,7 +4,7 @@ import prisma from '../prismaClient.js'
 
 export async function createOrder(req, res) {
     const userId = Number(req.userId)
-    const addressId = Number(req.body.id)
+    const addressId = Number(req.body.addressId)
 
     try {
 

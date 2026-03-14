@@ -146,6 +146,6 @@ model ShippingAddress {
 model Payment {
   id      Int    @id @default(autoincrement())
   order   Order  @relation(fields: [orderId], references: [id])
-  orderId Int
+  orderId Int    @unique
   status  String
 }

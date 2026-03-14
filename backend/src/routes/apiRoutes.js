@@ -1,4 +1,5 @@
-import express from 'express';
+import express from 'express'
+import authRoutes from './authRoutes.js'
 import userRoutes from './userRoutes.js'
 import itemRoutes from './itemRoutes.js'
 import categoryRoutes from './categoryRoutes.js'
@@ -7,18 +8,19 @@ import reviewRoutes from './reviewRoutes.js'
 import orderRoutes from './orderRoutes.js'
 import cartRoutes from './cartRoutes.js'
 import paymentRoutes from './paymentRoutes.js'
-import shipAddrRoutes from './shippAddrRoutes.js'
+import shippingAddressRoutes from './shippingAddressRoutes.js'
 
 const router = express.Router()
 
+router.use('/auth', authRoutes)
 router.use('/users', userRoutes)
 router.use('/items', itemRoutes)
-// router.use('/categories', categoryRoutes)
-// router.use('/favorites', favoriteRoutes)
-// router.use('/reviews', reviewRoutes)
-// router.use('/orders', orderRoutes)
-// router.use('/carts', cartRoutes)
-// router.use('/payments', paymentRoutes)
-// router.use('/shipping-addresses', shipAddrRoutes)
+router.use('/categories', categoryRoutes)
+router.use('/favorites', favoriteRoutes)
+router.use('/reviews', reviewRoutes)
+router.use('/orders', orderRoutes)
+router.use('/cart', cartRoutes)
+router.use('/payments', paymentRoutes)
+router.use('/shipping-addresses', shippingAddressRoutes)
 
 export default router

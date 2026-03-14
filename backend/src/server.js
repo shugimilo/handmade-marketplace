@@ -1,10 +1,8 @@
-import express from 'express';
-import '../config.js';
-import authRoutes from './routes/authRoutes.js';
-import apiRoutes from './routes/apiRoutes.js';
-import authMiddleware from './middleware/authenticationMiddleware.js';
+import express from 'express'
+import '../config.js'
+import apiRoutes from './routes/apiRoutes.js'
 
-const PORT = process.env.SERVER_PORT || 3000;
+const PORT = process.env.SERVER_PORT || 3000
 
 const app = express()
 
@@ -15,7 +13,6 @@ app.use('/uploads', express.static('src/public/uploads'))
 
 // ----------- ROUTES -----------
 
-app.use('/auth', authRoutes)
 app.use('/api', apiRoutes)
 
 // ----------- FINAL FUNCTION CALL -----------

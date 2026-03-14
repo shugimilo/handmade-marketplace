@@ -1,13 +1,43 @@
-export function authorizeSelfOrAdmin(req, res, next) {
-    const id = Number(req.params.id)
-    const { userId, isAdmin } = req
+import prisma from "../prismaClient.js"
 
-    // console.log(`id: ${id}\tuserId: ${userId}\tisAdmin: ${isAdmin}`)
+export function authorizeSelf(req, res, next) {
+    const id = Number(req.body.id)
+    const { userId } = req
 
-    if ((id !== userId) && !isAdmin) {
-        // console.log(`${id} !== ${userId}`)
+    if (id !== userId) {
         return res.status(403).json({ message: "Action unauthorized" })
     }
 
     next()
+}
+
+export function authorizeAdmin(req, res, next) {
+    const { isAdmin } = req
+
+    if (!isAdmin) {
+        return res.status(403).json({ message: "Action unauthorized" })
+    }
+
+    next()
+}
+
+export async function authorizeItemOwnerOrAdmin(req, res, next) {
+    const { userId, isAdmin } = req
+    const { authorId } = req.body
+    const id = req.params.id
+
+    try {
+        const item = await prisma.item.findUnique({
+            where: { id },
+            select: { authorId: true }
+        })
+
+        if (!item) return res.status(404).json({ message: "Item not found" })
+
+        if (userId !== item.authorId) return res.status(403).json({ message: "Action unauthorized" })
+
+        next()
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
 }

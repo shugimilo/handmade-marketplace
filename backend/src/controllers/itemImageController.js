@@ -48,6 +48,7 @@ export async function uploadItemImage(req, res) {
 
 export async function deleteItemImage(req, res) {
     const userId = Number(req.userId)
+    const itemId = Number(req.params.itemId)
     const imageId = Number(req.params.id)
 
     try {
@@ -60,6 +61,10 @@ export async function deleteItemImage(req, res) {
 
         if (!image) {
             return res.status(404).json({ message: "Image not found" })
+        }
+
+        if (!image.itemId !== itemId) {
+            return res.status(400).json({ message: "Image does not belong to this item" })
         }
 
         if (image.item.authorId !== userId) {

@@ -5,28 +5,28 @@ import prisma from '../prismaClient.js'
 export async function register(req, res) {
     const { username, password, email } = req.body
 
-    const existingEmail = await prisma.user.findUnique({
-        where: {
-            email: email
-        }
-    })
-
-    const existingUsername = await prisma.user.findUnique({
-        where: {
-            username: username
-        }
-    })
-
-    if (existingEmail) {
-        return res.status(400).json({ error: "Email already registered" })
-    }
-    if (existingUsername) {
-        return res.status(400).json({ error: "Username already exists" })
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 8)
-
     try {
+        const existingEmail = await prisma.user.findUnique({
+            where: {
+                email: email
+            }
+        })
+
+        const existingUsername = await prisma.user.findUnique({
+            where: {
+                username: username
+            }
+        })
+
+        if (existingEmail) {
+            return res.status(400).json({ error: "Email already registered" })
+        }
+        if (existingUsername) {
+            return res.status(400).json({ error: "Username already exists" })
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 8)
+        
         const user = await prisma.user.create({
             data: {
                 username: username,

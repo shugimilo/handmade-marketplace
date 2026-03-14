@@ -2,7 +2,7 @@ import prisma from "../prismaClient.js";
 
 export async function markItemAsFavorite(req, res) {
     const userId = Number(req.userId)
-    const { id } = req.body
+    const id = Number(req.params.id)
 
     try {
         const favorite = await prisma.favorite.upsert({
@@ -27,7 +27,7 @@ export async function markItemAsFavorite(req, res) {
 
 export async function unmarkItemAsFavorite(req, res) {
     const userId = Number(req.userId)
-    const { id } = req.body
+    const id = Number(req.params.id)
 
     try {
         const deletedFavorite = await prisma.favorite.delete({
