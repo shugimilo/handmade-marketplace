@@ -1,0 +1,30 @@
+### Login test
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "pimidim2@gmail.com",
+    "password": "bratshugi5"
+}
+
+### Create item test
+POST http://localhost:3000/api/items/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTc3MjkyNjgwOCwiZXhwIjoxNzczMDEzMjA4fQ.y9IPOnVEUilBvPk4je4jWExjPbEhH4M2OCycXWFx3ho
+Content-Type: application/json
+
+{
+    "name": "Ispletena torba",
+    "description": "Zenska torba/tasna, rucni rad, pleteno",
+    "price": 6000,
+    "categories": [1, 2, 3],
+    "pickupAvailable": true,
+    "deliveryAvailable": false
+}
+
+### Get all items test
+GET http://localhost:3000/api/items/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTc3MjkyNjgwOCwiZXhwIjoxNzczMDEzMjA4fQ.y9IPOnVEUilBvPk4je4jWExjPbEhH4M2OCycXWFx3ho
+
+
+### Get item with id: 1
+GET http://localhost:3000/api/items/1

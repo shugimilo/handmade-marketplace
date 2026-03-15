@@ -96,3 +96,10 @@ Content-Type: application/json
 {
   "orderId": 1
 }
+
+### Update Profile Picture
+POST {{base}}/api/users/me/profile-picture
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data
+
+image=@/path/to/image.png

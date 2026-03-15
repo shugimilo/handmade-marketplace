@@ -1,0 +1,59 @@
+### Registration test
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "username": "shugimilo",
+    "password": "bratshugi5",
+    "email": "pimidim2@gmail.com"
+}
+
+### Login test
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "pimidim2@gmail.com",
+    "password": "bratshugi5"
+}
+
+### Registration test - dummy account
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "username": "test",
+    "password": "test123",
+    "email": "test@gmail.com"
+}
+
+### Login test - dummy account
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "test@gmail.com",
+    "password": "test123"
+}
+
+### Fetch all users
+GET http://localhost:3000/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcyOTA2NjIyLCJleHAiOjE3NzI5OTMwMjJ9.G0TLPf70EJcLotyvPA7ChaYoscJCATagDkB9pzay0M0
+
+### Fetch the first user
+GET http://localhost:3000/api/users/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcyODUxNDc2LCJleHAiOjE3NzI5Mzc4NzZ9.p6PBUhyyP1xqi39kidL7KExyyUTfbXvMS0YrsFVl8SQ
+
+### Delete user with id: 2
+DELETE http://localhost:3000/api/users/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTc3MjkxMDE0OCwiZXhwIjoxNzcyOTk2NTQ4fQ.2F0Z8iJsIdLVXW3yYUH2FVEF5-n_YVAnFkZbFIH3XYI
+
+### Update user with id: 3
+PUT http://localhost:3000/api/users/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTc3MjkyNDUyOCwiZXhwIjoxNzczMDEwOTI4fQ.1Z22GfUorfwWyVYZcMtF4Keex_kL3q-bM_uhwfV3VrE
+Content-Type: application/json
+
+{
+    "username": "shugimilo2",
+    "email": "shugimilo@gmail.com"
+}
