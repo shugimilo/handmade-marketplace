@@ -81,14 +81,32 @@ export async function getCurrentUser(req, res) {
 }
 
 // For the admin panel
-
 export async function getAllUsers(req, res) {
-    try {
-        const users = await prisma.user.findMany({
-            select: basicUserInfo
-        })
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 12
+    const skip = (page - 1) * limit
 
-        res.json({ users })
+    try {
+        const [users, totalUsers] = await Promise.all([
+            prisma.user.findMany({
+                select: basicUserInfo,
+                skip,
+                take: limit
+            }),
+            prisma.user.count()
+        ])
+
+        const totalPages = Math.ceil(totalUsers / limit)
+
+        res.json({
+            users,
+            pagination: {
+                page,
+                limit,
+                totalUsers,
+                totalPages
+            }
+        })
     } catch (err) {
         return res.status(500).json({ message: err.message })
     }

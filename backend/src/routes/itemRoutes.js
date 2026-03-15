@@ -1,6 +1,6 @@
 import express from "express"
 
-import authMiddleware from "../middleware/authenticationMiddleware.js"
+import authenticationMiddleware from "../middleware/authenticationMiddleware.js"
 import { authorizeItemOwnerOrAdmin } from "../middleware/authorizationMiddleware.js"
 import uploadItemImageMiddleware from "../middleware/uploadItemImageMiddleware.js"
 
@@ -24,21 +24,21 @@ const router = express.Router()
 router.get("/", getAllItems)
 router.get("/:id", getItemById)
 
-router.post("/", authMiddleware, createItem)
+router.post("/", authenticationMiddleware, createItem)
 router.post("/:id/reviews", authenticationMiddleware, createReview)
-router.put("/:id", authMiddleware, authorizeItemOwnerOrAdmin, updateItem)
-router.delete("/:id", authMiddleware, authorizeItemOwnerOrAdmin, deleteItem)
+router.put("/:id", authenticationMiddleware, authorizeItemOwnerOrAdmin, updateItem)
+router.delete("/:id", authenticationMiddleware, authorizeItemOwnerOrAdmin, deleteItem)
 
 router.post(
     "/:itemId/images",
-    authMiddleware,
+    authenticationMiddleware,
     uploadItemImageMiddleware.single("image"),
     uploadItemImage
 )
 
 router.delete(
     "/:itemId/images/:id",
-    authMiddleware,
+    authenticationMiddleware,
     deleteItemImage
 )
 

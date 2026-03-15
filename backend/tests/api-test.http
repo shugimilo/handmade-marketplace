@@ -1,0 +1,98 @@
+@base = http://localhost:3000/api
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTc3MzUzOTc2MywiZXhwIjoxNzczNjI2MTYzfQ.mNiOkMDoKEUzWATL6OzzuffsGezk1glNavC3y9WnySM
+
+### Register
+POST {{base}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@test.com",
+  "password": "password123"
+}
+
+### Login
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "password123"
+}
+
+### Create Item
+POST {{base}}/items
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Handmade Vase",
+  "description": "Ceramic vase",
+  "price": 2000,
+  "pickupAvailable": true,
+  "deliveryAvailable": true,
+  "categories": [1]
+}
+
+### Get Items
+GET {{base}}/items?page=1&limit=10
+
+### Search
+GET {{base}}/search?q=vase
+
+### Favorite Item
+POST {{base}}/favorites/1
+Authorization: Bearer {{token}}
+
+### Create Address
+POST {{base}}/shipping-addresses
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "street": "Main",
+  "houseNo": "12",
+  "neighborhood": "Center",
+  "city": "Kragujevac"
+}
+
+### Add Item to Cart
+POST {{base}}/cart/items
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": 3,
+  "quantity": 1
+}
+
+### Get Cart
+GET {{base}}/cart
+Authorization: Bearer {{token}}
+
+### Create Order
+POST {{base}}/orders
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "addressId": 1
+}
+
+### Update Order Status
+PATCH {{base}}/orders/1/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "status": "Shipped"
+}
+
+### Order Payment
+POST {{base}}/payments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "orderId": 1
+}

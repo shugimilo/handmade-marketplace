@@ -27,16 +27,33 @@ export async function createItem(req, res) {
 }
 
 export async function getAllItems(req, res) {
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 12
+    const skip = (page - 1) * limit
+
     try {
-        const items = await prisma.item.findMany({
-            select: basicItemInfo
+        const [items, totalItems] = await Promise.all([
+            prisma.item.findMany({
+                select: basicItemInfo,
+                skip,
+                take: limit
+            }),
+            prisma.item.count()
+        ])
+
+        const totalPages = Math.ceil(totalItems / limit)
+
+        res.json({
+            items,
+            pagination: {
+                page,
+                limit,
+                totalItems,
+                totalPages
+            }
         })
-
-        if (items.length === 0) return res.status(400).json({ message: "There are no items" })
-
-        res.json({ items })
     } catch (err) {
-        res.status(500).json({ message: err.message} )
+        res.status(500).json({ message: err.message })
     }
 }
 

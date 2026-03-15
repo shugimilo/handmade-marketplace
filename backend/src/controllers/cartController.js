@@ -26,12 +26,16 @@ export async function addItemToCart(req, res) {
     const userId = Number(req.userId)
     const { id, quantity } = req.body
 
+    console.log(id)
+
     try {
         const cart = await prisma.cart.upsert({
             where: { userId },
             update: {},
             create: { userId }
         })
+
+        console.log("Passed first fetch")
 
         const cartItem = await prisma.cartItem.upsert({
             where: { 
