@@ -22,6 +22,7 @@ export const CartProvider = ({ children }) => {
     try {
       setLoading(true);
       const res = await api.get("/cart");
+      console.log("Fetched cart:", res.data);
       setCart(res.data);
     } catch (err) {
       console.error(err);
@@ -32,24 +33,50 @@ export const CartProvider = ({ children }) => {
   };
 
   const addToCart = async (itemId, quantity = 1) => {
-    if (!token) {
-      console.warn("User must be logged in to add items to cart.");
-      return;
-    }
-
-    await api.post("/cart/items", {
-      id: itemId,
-      quantity
-    });
-
-    await fetchCart();
-  };
-
-  const removeFromCart = async (itemId) => {
     if (!token) return;
 
-    await api.delete(`/cart/items/${itemId}`);
-    await fetchCart();
+    try {
+      await api.post("/cart/items", {
+        id: itemId,
+        quantity
+      });
+      await fetchCart();
+    } catch (err) {
+      console.error("Add to cart failed:", err.response?.data || err.message);
+    }
+  };
+
+  const decreaseQuantity = async (cartItemId) => {
+    if (!token) return;
+
+    try {
+      await api.patch(`/cart/items/${cartItemId}/decrease`);
+      await fetchCart();
+    } catch (err) {
+      console.error("Decrease quantity failed:", err.response?.data || err.message);
+    }
+  };
+
+  const removeFromCart = async (cartItemId) => {
+    if (!token) return;
+
+    try {
+      await api.delete(`/cart/items/${cartItemId}`);
+      await fetchCart();
+    } catch (err) {
+      console.error("Remove from cart failed:", err.response?.data || err.message);
+    }
+  };
+
+  const emptyCart = async () => {
+    if (!token) return;
+
+    try {
+      await api.delete("/cart");
+      await fetchCart();
+    } catch (err) {
+      console.error("Empty cart failed:", err.response?.data || err.message);
+    }
   };
 
   useEffect(() => {
@@ -63,7 +90,9 @@ export const CartProvider = ({ children }) => {
         loading,
         fetchCart,
         addToCart,
-        removeFromCart
+        decreaseQuantity,
+        removeFromCart,
+        emptyCart
       }}
     >
       {children}

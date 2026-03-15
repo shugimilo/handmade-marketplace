@@ -2,6 +2,7 @@ import { basicCartInfo } from "../../prisma/selects/basic.select.js";
 import prisma from "../prismaClient.js";
 
 export async function getUserCart(req, res) {
+    console.log("Endpoint hit: [getUserCard]")
     const userId = Number(req.userId);
 
     if (!userId) {
@@ -30,40 +31,37 @@ export async function getUserCart(req, res) {
 }
 
 export async function addItemToCart(req, res) {
-    const userId = Number(req.userId)
-    const { id, quantity } = req.body
-
-    console.log(id)
+    const userId = Number(req.userId);
+    const id = Number(req.body.id);
+    const quantity = Number(req.body.quantity) || 1;
 
     try {
         const cart = await prisma.cart.upsert({
             where: { userId },
             update: {},
             create: { userId }
-        })
-
-        console.log("Passed first fetch")
+        });
 
         const cartItem = await prisma.cartItem.upsert({
-            where: { 
+            where: {
                 cartId_itemId: {
                     cartId: cart.id,
                     itemId: id,
                 }
             },
             update: {
-                quantity: { increment: quantity || 1 }
+                quantity: { increment: quantity }
             },
             create: {
                 cartId: cart.id,
                 itemId: id,
-                quantity: quantity || 1
+                quantity
             }
-        })
+        });
 
-        res.json({ cartItem })
+        return res.json({ cartItem });
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        return res.status(500).json({ message: err.message });
     }
 }
 

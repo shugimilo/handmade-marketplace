@@ -17,7 +17,10 @@ export default function ProductCard({ item }) {
       <h3>{item.name}</h3>
       <p>{item.price} RSD</p>
 
-      <button onClick={() => addToCart(item.id, 1)}>
+      <button onClick={() => {
+        console.log("Adding item: ", item.id)
+        addToCart(item.id, 1)
+        }}>
         Add to cart
       </button>
     </div>

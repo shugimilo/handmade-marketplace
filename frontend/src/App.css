@@ -159,3 +159,57 @@ body {
   padding: 12px 0;
   border-bottom: 1px solid #ddd;
 }
+
+/*----------- Cart styling -----------*/
+
+.cart-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.cart-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cart-item {
+  display: flex;
+  gap: 16px;
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.cart-item__image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.cart-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cart-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.cart-item__controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-item__controls button {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}

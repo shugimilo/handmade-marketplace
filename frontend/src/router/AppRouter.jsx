@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import HomePage from "../pages/HomePage";
 import ItemPage from "../pages/ItemPage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
+import CartPage from "../pages/CartPage";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -19,7 +20,7 @@ export default function AppRouter() {
           path="/cart"
           element={
             <ProtectedRoute>
-              <div>Cart Page</div>
+              <CartPage />
             </ProtectedRoute>
           }
         />
