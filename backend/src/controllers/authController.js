@@ -31,7 +31,10 @@ export async function register(req, res) {
             data: {
                 username: username,
                 password: hashedPassword,
-                email: email
+                email: email,
+                cart: {
+                    create: {}
+                }
             }
         })
 

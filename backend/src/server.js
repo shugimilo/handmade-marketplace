@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import '../config.js'
 import apiRoutes from './routes/apiRoutes.js'
 
@@ -7,6 +8,10 @@ const PORT = process.env.SERVER_PORT || 3000
 const app = express()
 
 // ----------- MIDDLEWARE -----------
+
+app.use(cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"]
+}))
 
 app.use(express.json())
 app.use('/uploads', express.static('src/public/uploads'))

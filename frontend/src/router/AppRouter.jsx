@@ -1,27 +1,28 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Layout from "../components/layout/Layout"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from "../pages/Home"
-import Categories from "../pages/Categories"
-import Cart from "../pages/Cart"
-import Profile from "../pages/Profile"
-import Shop from "../pages/Shop"
+import HomePage from "../pages/HomePage";
+import ItemPage from "../pages/ItemPage";
+import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
+
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppRouter() {
   return (
-    <BrowserRouter>
       <Routes>
-        <Route element={<Layout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/items/:id" element={<ItemPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
-        <Route index element={<Home />} />
-
-        <Route path="shop" element={<Shop />} />
-        <Route path="categories" element={<Categories />} />
-        <Route path="cart" element={<Cart />} />
-        <Route path="profile" element={<Profile />} />
-
-        </Route>
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <div>Cart Page</div>
+            </ProtectedRoute>
+          }
+        />
       </Routes>
-    </BrowserRouter>
-  )
+  );
 }

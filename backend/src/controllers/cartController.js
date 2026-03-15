@@ -2,23 +2,30 @@ import { basicCartInfo } from "../../prisma/selects/basic.select.js";
 import prisma from "../prismaClient.js";
 
 export async function getUserCart(req, res) {
-    const userId = Number(req.userId)
+    const userId = Number(req.userId);
+
+    if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
 
     try {
         const cart = await prisma.cart.findFirst({
             where: { userId },
             select: basicCartInfo
-        })
+        });
 
-        if (!cart) return res.status(400).json({ cart: null, total: 0 })
+        if (!cart) {
+            return res.json({ cart: null, total: 0 });
+        }
 
         const total = cart.cartItems.reduce(
-            (sum, ci) => sum + ci.item.price * ci.quantity, 0
-        )
+            (sum, ci) => sum + ci.item.price * ci.quantity,
+            0
+        );
 
-        res.json({ cart, total })
+        return res.json({ cart, total });
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        return res.status(500).json({ message: err.message });
     }
 }
 
