@@ -1,5 +1,5 @@
 @base = http://localhost:3000/api
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTc3MzUzOTc2MywiZXhwIjoxNzczNjI2MTYzfQ.mNiOkMDoKEUzWATL6OzzuffsGezk1glNavC3y9WnySM
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTc3MzU0MzkzMywiZXhwIjoxNzczNjMwMzMzfQ.Jkju0sOpEqgwJPgPOrUYudlspZYEY5TSpV2iriLSNdw
 
 ### Register
 POST {{base}}/auth/register
@@ -98,8 +98,8 @@ Content-Type: application/json
 }
 
 ### Update Profile Picture
-POST {{base}}/api/users/me/profile-picture
+POST {{base}}/users/me/profile-picture
 Authorization: Bearer {{token}}
 Content-Type: multipart/form-data
 
-image=@/path/to/image.png
+image=@"C:\Users\pimid\Desktop\uforia.jpg"

@@ -139,6 +139,30 @@ export async function updateProfile(req, res) {
     }
 }
 
+export async function uploadProfilePicture(req, res) {
+    const userId = Number(req.userId)
+
+    if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" })
+    }
+
+    try {
+        const imagePath = `/uploads/profiles/${req.file.filename}`
+
+        await prisma.user.update({
+            where: { id: userId },
+            data: { pfpUrl: imagePath }
+        })
+
+        res.json({
+            message: "Profile picture updated",
+            url: `${req.protocol}://${req.get("host")}${imagePath}`
+        })
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
+}
+
 // For when users delete their own profile
 
 export async function deleteUser(req, res) {

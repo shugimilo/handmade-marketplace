@@ -24,8 +24,7 @@ model User {
   createdAt         DateTime          @default(now())
   isAdmin           Boolean           @default(false)
   bio               String?
-  pfpUrl            String?
-  
+  pfpUrl            String            @default("/uploads/default-pfp.png")  
   items             Item[]
   buyerOrders       Order[]           @relation("BuyerOrders")
   favorites         Favorite[]        @relation("UserFavorites")
