@@ -1054,3 +1054,51 @@ body {
   font-size: 0.9rem;
   color: #666;
 }
+
+/*----------- Admin panel styling -----------*/
+
+.admin-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.admin-tabs button {
+  padding: 10px 16px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.admin-tabs__active {
+  font-weight: bold;
+  border-color: black;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.admin-table th,
+.admin-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.admin-table th {
+  background: #f8f8f8;
+}

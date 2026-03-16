@@ -33,7 +33,7 @@ export default function ProductCard({ item }) {
       </button>
 
       <Link to={`/items/${item.id}`}>
-        <img src={imageUrl} alt={item.name} />
+        <img src={imageUrl ? imageUrl : '/placeholder.png'} alt={item.name} />
       </Link>
 
       <h3>{item.name}</h3>

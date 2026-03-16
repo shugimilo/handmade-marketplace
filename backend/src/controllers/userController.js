@@ -89,7 +89,11 @@ export async function getAllUsers(req, res) {
     try {
         const [users, totalUsers] = await Promise.all([
             prisma.user.findMany({
-                select: basicUserInfo,
+                select: {
+                  ...basicUserInfo,
+                  email: true,
+                  createdAt: true  
+                },
                 skip,
                 take: limit
             }),
@@ -179,14 +183,37 @@ export async function deleteUser(req, res) {
 // For user deletion triggered by admins
 
 export async function adminDeleteUser(req, res) {
-        const id = Number(req.params.id)
-    try {
-        const deletedUser = await prisma.user.delete({
-            where: { id }
-        })
+    const id = Number(req.params.id);
 
-        res.json({ deletedUser })
+    if (Number(req.userId) === id) {
+        return res.status(400).json({ message: "You cannot delete your own admin account." });
+    }
+
+    try {
+        const deletedUser = await prisma.$transaction(async (tx) => {
+            const cart = await tx.cart.findFirst({
+                where: { userId: id },
+                select: { id: true }
+            });
+
+            if (cart) {
+                await tx.cartItem.deleteMany({
+                    where: { cartId: cart.id }
+                });
+
+                await tx.cart.delete({
+                    where: { id: cart.id }
+                });
+            }
+
+            return await tx.user.delete({
+                where: { id }
+            });
+        });
+
+        return res.json({ deletedUser });
     } catch (err) {
-        res.status(500).json({ message: `Server error: ${err.message}`})
+        console.error("Admin delete user error:", err);
+        return res.status(500).json({ message: `Server error: ${err.message}` });
     }
 }

@@ -71,3 +71,44 @@ export async function deleteReview(req, res) {
         return res.status(500).json({ message: err.message })
     }
 }
+
+export async function getAllReviews(req, res) {
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 12
+    const skip = (page - 1) * limit
+
+    try {
+        const [reviews, totalReviews] = await Promise.all([
+            prisma.review.findMany({
+                select: {
+                    id: true,
+                    itemId: true,
+                    reviewerId: true,
+                    rating: true,
+                    comment: true,
+                    reviewedOn: true
+                },
+                skip,
+                take: limit,
+                orderBy: {
+                    id: "desc"
+                }
+            }),
+            prisma.review.count()
+        ])
+
+        const totalPages = Math.ceil(totalReviews / limit)
+
+        res.json({
+            reviews,
+            pagination: {
+                page,
+                limit,
+                totalReviews,
+                totalPages
+            }
+        })
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
+    }
+}

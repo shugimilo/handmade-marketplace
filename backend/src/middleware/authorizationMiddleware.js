@@ -23,6 +23,7 @@ export function authorizeAdmin(req, res, next) {
 
 export async function authorizeItemOwnerOrAdmin(req, res, next) {
     const userId = Number(req.userId)
+    const isAdmin = req.isAdmin
     const id = Number(req.params.id)
 
     console.log("Item id: ", id)
@@ -37,7 +38,7 @@ export async function authorizeItemOwnerOrAdmin(req, res, next) {
 
         if (!item) return res.status(404).json({ message: "Item not found" })
 
-        if (userId !== item.authorId) return res.status(403).json({ message: "Action unauthorized" })
+        if (userId !== item.authorId && !isAdmin) return res.status(403).json({ message: "Action unauthorized" })
 
         next()
     } catch (err) {

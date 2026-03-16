@@ -14,6 +14,7 @@ import EditItemPage from "../pages/EditItemPage";
 import SearchResultsPage from "../pages/SearchResultsPage";
 import CategoriesPage from "../pages/CategoriesPage";
 import CategoryPage from "../pages/CategoryPage";
+import AdminPage from "../pages/AdminPage";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -85,7 +86,10 @@ export default function AppRouter() {
         <Route path="/search" element={<SearchResultsPage />} />
 
         <Route path="/categories" element={<CategoriesPage />} />
+
         <Route path="/categories/:id" element={<CategoryPage />} />
+        
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
   );
 }

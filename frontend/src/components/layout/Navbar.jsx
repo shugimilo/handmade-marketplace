@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
 import { searchAll } from "../../api/searchApi";
 import { getCurrentUser } from "../../api/usersApi";
+import { isCurrentUserAdmin } from "../../utils/admin";
 
 export default function Navbar() {
   const { isAuthenticated, logout, token } = useAuth();
@@ -108,6 +109,8 @@ export default function Navbar() {
   const profileImageUrl = currentUser?.pfpUrl
     ? `http://localhost:3000${currentUser.pfpUrl}`
     : "/placeholder.png";
+
+  const isAdmin = isCurrentUserAdmin();
 
   return (
     <nav className="navbar">
@@ -241,6 +244,8 @@ export default function Navbar() {
               />
               <span>{currentUser?.username || "Profile"}</span>
             </Link>
+
+            {isAdmin && <Link to="/admin">Admin</Link>}
 
             <button className="navbar__logout" onClick={handleLogout}>
               Logout
