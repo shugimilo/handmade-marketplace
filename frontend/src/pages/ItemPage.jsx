@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getItemById } from "../api/itemsApi";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { getItemById, deleteItem } from "../api/itemsApi";
 import { useCart } from "../context/CartContext";
+import { getCurrentUserIdFromToken } from "../utils/auth";
 
 export default function ItemPage() {
   const { id } = useParams();
@@ -10,6 +11,22 @@ export default function ItemPage() {
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  
+
+  const navigate = useNavigate();
+
+  const handleDeleteItem = async () => {
+    const confirmed = window.confirm("Are you sure you want to delete this item?");
+    if (!confirmed) return;
+
+    try {
+      await deleteItem(item.id);
+      navigate("/me");
+    } catch (err) {
+      console.error(err);
+      setError("Failed to delete item.");
+    }
+  };
 
   useEffect(() => {
     const loadItem = async () => {
@@ -28,9 +45,13 @@ export default function ItemPage() {
     loadItem();
   }, [id]);
 
+  const currentUserId = getCurrentUserIdFromToken();
+
   if (loading) return <p>Loading item...</p>;
   if (error) return <p>{error}</p>;
   if (!item) return <p>Item not found.</p>;
+
+  const isOwner = currentUserId === item.authorId;
 
   const firstImage = item.itemImages?.[0]?.url
     ? `http://localhost:3000${item.itemImages[0].url}`
@@ -64,10 +85,18 @@ export default function ItemPage() {
           </p>
         </div>
 
-        {item.user && (
+        {item.author && (
           <p>
             <strong>Seller:</strong>{" "}
-            {item.user.username || item.user.firstName || "Unknown seller"}
+            <Link
+              to={
+                currentUserId === item.author.id
+                  ? "/me"
+                  : `/users/${item.author.id}`
+              }
+            >
+              {item.author.username || "Unknown seller"}
+            </Link>
           </p>
         )}
 
@@ -93,6 +122,18 @@ export default function ItemPage() {
         >
           Add to cart
         </button>
+
+        {isOwner && (
+          <div className="item-page__owner-actions">
+            <Link to={`/items/${item.id}/edit`}>
+              <button>Edit Item</button>
+            </Link>
+
+            <button onClick={handleDeleteItem}>
+              Delete Item
+            </button>
+          </div>
+        )}
       </div>
 
       {item.reviews?.length > 0 && (

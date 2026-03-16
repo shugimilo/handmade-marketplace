@@ -480,3 +480,61 @@ body {
   border-radius: 999px;
   padding: 8px 12px;
 }
+
+/*----------- Public user profile page styling -----------*/
+
+.profile-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.profile-item-card {
+  display: block;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+}
+
+.profile-item-card__image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.profile-item-card__content {
+  padding: 12px;
+}
+
+/*----------- Edit item page styling -----------*/
+
+
+.item-page__owner-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.edit-item-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.edit-item-image-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 180px;
+}
+
+.edit-item-image-card__img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}

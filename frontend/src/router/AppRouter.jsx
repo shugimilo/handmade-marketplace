@@ -9,6 +9,8 @@ import OrdersPage from "../pages/OrdersPage";
 import CheckoutPage from "../pages/CheckoutPage";
 import MyProfilePage from "../pages/MyProfilePage";
 import CreateItemPage from "../pages/CreateItemPage";
+import ProfilePage from "../pages/ProfilePage";
+import EditItemPage from "../pages/EditItemPage";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -61,6 +63,18 @@ export default function AppRouter() {
           element={
             <ProtectedRoute>
               <CreateItemPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/users/:id" element={<ProfilePage />} />
+
+        <Route
+          path="/items/:id/edit"
+          element={
+            <ProtectedRoute>
+              <EditItemPage />
             </ProtectedRoute>
           }
         />

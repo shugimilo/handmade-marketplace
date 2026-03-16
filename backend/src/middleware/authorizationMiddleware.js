@@ -22,15 +22,18 @@ export function authorizeAdmin(req, res, next) {
 }
 
 export async function authorizeItemOwnerOrAdmin(req, res, next) {
-    const { userId, isAdmin } = req
-    const { authorId } = req.body
-    const id = req.params.id
+    const userId = Number(req.userId)
+    const id = Number(req.params.id)
+
+    console.log("Item id: ", id)
 
     try {
         const item = await prisma.item.findUnique({
             where: { id },
             select: { authorId: true }
         })
+
+        console.log(`Author of item with id ${id} is user with id ${item.authorId}`)
 
         if (!item) return res.status(404).json({ message: "Item not found" })
 

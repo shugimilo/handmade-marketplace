@@ -15,6 +15,16 @@ export const createItem = async (itemData) => {
   return res.data;
 };
 
+export const updateItem = async (id, itemData) => {
+  const res = await api.put(`/items/${id}`, itemData);
+  return res.data;
+};
+
+export const deleteItem = async (id) => {
+  const res = await api.delete(`/items/${id}`);
+  return res.data;
+};
+
 export const uploadItemImage = async (itemId, imageFile) => {
   const formData = new FormData();
   formData.append("image", imageFile);
@@ -25,5 +35,10 @@ export const uploadItemImage = async (itemId, imageFile) => {
     }
   });
 
+  return res.data;
+};
+
+export const deleteItemImage = async (itemId, imageId) => {
+  const res = await api.delete(`/items/${itemId}/images/${imageId}`);
   return res.data;
 };

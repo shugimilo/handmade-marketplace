@@ -128,15 +128,49 @@ export async function updateItem(req, res) {
 }
 
 export async function deleteItem(req, res) {
-    const id = Number(req.params.id)
+    const id = Number(req.params.id);
+
+    console.log(`Received item id: ${id}`);
 
     try {
-        const deletedItem = await prisma.item.delete({
-            where: { id }
-        })
+        const existingOrderItem = await prisma.orderItem.findFirst({
+            where: { itemId: id },
+            select: { id: true }
+        });
 
-        res.json({ deletedItem })
+        if (existingOrderItem) {
+            return res.status(400).json({
+                message: "This item cannot be deleted because it appears in existing orders."
+            });
+        }
+
+        const deletedItem = await prisma.$transaction(async (tx) => {
+            await tx.itemImage.deleteMany({
+                where: { itemId: id }
+            });
+
+            await tx.favorite.deleteMany({
+                where: { itemId: id }
+            });
+
+            await tx.review.deleteMany({
+                where: { itemId: id }
+            });
+
+            await tx.cartItem.deleteMany({
+                where: { itemId: id }
+            });
+
+            return await tx.item.delete({
+                where: { id }
+            });
+        });
+
+        console.log(`Deleted item with id ${deletedItem.id}`);
+
+        return res.json({ deletedItem });
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        console.error("Delete item error:", err);
+        return res.status(500).json({ message: err.message });
     }
 }
