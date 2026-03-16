@@ -44,8 +44,8 @@ export default function CartPage() {
           <div className="cart-list">
             {cartData.cartItems.map((cartItem) => {
               const item = cartItem.item;
-              const imageUrl = item.images?.[0]?.url
-                ? `http://localhost:3000${item.images[0].url}`
+              const imageUrl = item.itemImages?.[0]?.url
+                ? `http://localhost:3000${item.itemImages[0].url}`
                 : "/placeholder.png";
 
               return (
@@ -82,7 +82,6 @@ export default function CartPage() {
             })}
           </div>
 
-          <h2>Total: {total} RSD</h2>
           <div className="cart-page__actions">
             <h2>Total: {total} RSD</h2>
             <Link to="/checkout">

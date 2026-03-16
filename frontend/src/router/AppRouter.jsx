@@ -11,6 +11,8 @@ import MyProfilePage from "../pages/MyProfilePage";
 import CreateItemPage from "../pages/CreateItemPage";
 import ProfilePage from "../pages/ProfilePage";
 import EditItemPage from "../pages/EditItemPage";
+import SearchResultsPage from "../pages/SearchResultsPage";
+import CategoryPage from "../pages/CategoryPage";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -78,6 +80,10 @@ export default function AppRouter() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="/search" element={<SearchResultsPage />} />
+
+        <Route path="/categories/:id/items" element={<CategoryPage />} />
       </Routes>
   );
 }

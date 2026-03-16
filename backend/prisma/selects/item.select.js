@@ -13,6 +13,12 @@ export const itemOwnerView = {
     pickupAvailable: true,
     deliveryAvailable: true,
     itemImages: true,
+    categories: {
+        select: {
+            id: true,
+            name: true
+        }
+    },
     favoritedBy: {
         select: {
             user: {
@@ -47,6 +53,12 @@ export const publicItemView = {
             reviewer: {
                 select: basicUserInfo
             }
+        }
+    },
+    categories: {
+        select: {
+            id: true,
+            name: true
         }
     }
 }

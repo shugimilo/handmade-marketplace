@@ -1,6 +1,7 @@
 import express from "express"
 
 import authenticationMiddleware from "../middleware/authenticationMiddleware.js"
+import { lightAuthMiddleware } from "../middleware/authenticationMiddleware.js"
 import { authorizeItemOwnerOrAdmin } from "../middleware/authorizationMiddleware.js"
 import uploadItemImageMiddleware from "../middleware/uploadItemImageMiddleware.js"
 

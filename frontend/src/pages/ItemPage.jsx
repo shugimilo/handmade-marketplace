@@ -3,17 +3,42 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { getItemById, deleteItem } from "../api/itemsApi";
 import { useCart } from "../context/CartContext";
 import { getCurrentUserIdFromToken } from "../utils/auth";
+import { useFavorites } from "../context/FavoritesContext";
 
 export default function ItemPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { addToCart } = useCart();
 
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [error, setError] = useState("");
-  
+  const { isFavorite, toggleFavorite } = useFavorites();
 
-  const navigate = useNavigate();
+  const currentUserId = getCurrentUserIdFromToken();
+
+  useEffect(() => {
+    const loadItem = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const data = await getItemById(id);
+        setItem(data.item || data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load item.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadItem();
+  }, [id]);
+
+  useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [item?.id]);
 
   const handleDeleteItem = async () => {
     const confirmed = window.confirm("Are you sure you want to delete this item?");
@@ -28,24 +53,13 @@ export default function ItemPage() {
     }
   };
 
-  useEffect(() => {
-    const loadItem = async () => {
-      try {
-        setLoading(true);
-        const data = await getItemById(id);
-        setItem(data.item || data);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load item.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleToggleFavorite = async () => {
+    const success = await toggleFavorite(item.id);
 
-    loadItem();
-  }, [id]);
-
-  const currentUserId = getCurrentUserIdFromToken();
+    if (!success) {
+      setError("Failed to update favorite.");
+    }
+  };
 
   if (loading) return <p>Loading item...</p>;
   if (error) return <p>{error}</p>;
@@ -53,18 +67,76 @@ export default function ItemPage() {
 
   const isOwner = currentUserId === item.authorId;
 
-  const firstImage = item.itemImages?.[0]?.url
-    ? `http://localhost:3000${item.itemImages[0].url}`
+  const images = item.itemImages || [];
+  const hasImages = images.length > 0;
+
+  const currentImageUrl = hasImages
+    ? `http://localhost:3000${images[currentImageIndex].url}`
     : "/placeholder.png";
+
+  const itemIsFavorite = isFavorite(item.id);
+
+  const goToPreviousImage = () => {
+    if (!hasImages) return;
+
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? images.length - 1 : prev - 1
+    );
+  };
+
+  const goToNextImage = () => {
+    if (!hasImages) return;
+
+    setCurrentImageIndex((prev) =>
+      prev === images.length - 1 ? 0 : prev + 1
+    );
+  };
 
   return (
     <div className="item-page">
       <div className="item-page__image-wrap">
         <img
           className="item-page__image"
-          src={firstImage}
+          src={currentImageUrl}
           alt={item.name}
         />
+
+        {images.length > 1 && (
+          <>
+            <div className="item-page__image-controls">
+              <button type="button" onClick={goToPreviousImage}>
+                Previous
+              </button>
+              <span>
+                {currentImageIndex + 1} / {images.length}
+              </span>
+              <button type="button" onClick={goToNextImage}>
+                Next
+              </button>
+            </div>
+
+            <div className="item-page__thumbnails">
+              {images.map((image, index) => (
+                <button
+                  key={image.id}
+                  type="button"
+                  className={`item-page__thumbnail-btn ${
+                    index === currentImageIndex
+                      ? "item-page__thumbnail-btn--active"
+                      : ""
+                  }`}
+                  onClick={() => setCurrentImageIndex(index)}
+                >
+                  <img
+                    src={`http://localhost:3000${image.url}`}
+                    alt={`${item.name} ${index + 1}`}
+                    className="item-page__thumbnail"
+                  />
+                </button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="item-page__content">
@@ -105,16 +177,25 @@ export default function ItemPage() {
             <strong>Categories:</strong>
             <div className="item-page__category-list">
               {item.categories.map((category) => (
-                <span
+                <Link
                   key={category.id}
+                  to={`/categories/${category.id}`}
                   className="item-page__category-badge"
                 >
                   {category.name}
-                </span>
+                </Link>
               ))}
             </div>
           </div>
         )}
+
+        <button
+          type="button"
+          className="item-page__favorite-btn"
+          onClick={handleToggleFavorite}
+        >
+          {itemIsFavorite ? "♥ Remove from favorites" : "♡ Add to favorites"}
+        </button>
 
         <button
           className="item-page__cart-btn"

@@ -59,7 +59,7 @@ export async function getAllItems(req, res) {
 
 export async function getItemById(req, res) {
     const id = Number(req.params.id)
-    const userId = req.userId ? Number(req.userId) : null
+    // const userId = req.userId ? Number(req.userId) : null
 
     try {
         const existingItem = await prisma.item.findUnique({
@@ -73,7 +73,8 @@ export async function getItemById(req, res) {
 
         const item = await prisma.item.findUnique({
             where: { id },
-            select: existingItem.authorId === userId ? itemOwnerView : publicItemView
+            // select: Number(existingItem.authorId) === userId ? itemOwnerView : publicItemView
+            select: publicItemView
         })
 
         res.json({ item })
