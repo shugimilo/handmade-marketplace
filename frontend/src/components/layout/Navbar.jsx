@@ -20,10 +20,13 @@ export default function Navbar() {
 
       <div className="navbar__right">
         <Link to="/">Home</Link>
-        <Link to="/cart">Cart</Link>
 
         {isAuthenticated ? (
           <>
+            <Link to="/cart">Cart</Link>
+            <Link to="/orders">Orders</Link>
+            <Link to="/items/new">Sell Item</Link>
+            <Link to="/me">My Profile</Link>
             <button className="navbar__logout" onClick={handleLogout}>
               Logout
             </button>

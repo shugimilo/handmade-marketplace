@@ -42,6 +42,17 @@ export async function addItemToCart(req, res) {
             create: { userId }
         });
 
+        const item = await prisma.item.findUnique({
+            where: { id },
+            select: {
+                authorId: true
+            }
+        })
+
+        if (item.authorId === userId) {
+            res.status(400).json({ message: "You can't add your own items to your cart" })
+        }
+
         const cartItem = await prisma.cartItem.upsert({
             where: {
                 cartId_itemId: {

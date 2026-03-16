@@ -1,4 +1,5 @@
 import { useCart } from "../context/CartContext";
+import { Link } from "react-router-dom";
 
 export default function CartPage() {
   const {
@@ -82,6 +83,12 @@ export default function CartPage() {
           </div>
 
           <h2>Total: {total} RSD</h2>
+          <div className="cart-page__actions">
+            <h2>Total: {total} RSD</h2>
+            <Link to="/checkout">
+              <button>Go to Checkout</button>
+            </Link>
+          </div>
         </>
       )}
     </div>

@@ -5,6 +5,10 @@ import ItemPage from "../pages/ItemPage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import CartPage from "../pages/CartPage";
+import OrdersPage from "../pages/OrdersPage";
+import CheckoutPage from "../pages/CheckoutPage";
+import MyProfilePage from "../pages/MyProfilePage";
+import CreateItemPage from "../pages/CreateItemPage";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -21,6 +25,42 @@ export default function AppRouter() {
           element={
             <ProtectedRoute>
               <CartPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <OrdersPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/me"
+          element={
+            <ProtectedRoute>
+              <MyProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/items/new"
+          element={
+            <ProtectedRoute>
+              <CreateItemPage />
             </ProtectedRoute>
           }
         />

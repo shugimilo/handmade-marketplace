@@ -116,15 +116,13 @@ export async function getAllUsers(req, res) {
 
 export async function updateProfile(req, res) {
     const id = Number(req.userId)
-    const { username, email, pfpUrl, bio } = req.body
+    const { username, bio } = req.body
 
     try {
         const updatedUser = await prisma.user.update({
             where: { id },
             data: {
-                email,
                 username,
-                pfpUrl,
                 bio
             }
         })

@@ -32,8 +32,8 @@ export default function ItemPage() {
   if (error) return <p>{error}</p>;
   if (!item) return <p>Item not found.</p>;
 
-  const firstImage = item.images?.[0]?.url
-    ? `http://localhost:3000${item.images[0].url}`
+  const firstImage = item.itemImages?.[0]?.url
+    ? `http://localhost:3000${item.itemImages[0].url}`
     : "/placeholder.png";
 
   return (

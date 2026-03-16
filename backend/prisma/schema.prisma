@@ -144,8 +144,10 @@ model ShippingAddress {
 }
 
 model Payment {
-  id      Int    @id @default(autoincrement())
-  order   Order  @relation(fields: [orderId], references: [id])
-  orderId Int    @unique
-  status  String
+  id              Int      @id @default(autoincrement())
+  order           Order    @relation(fields: [orderId], references: [id])
+  orderId         Int      @unique
+  status          String
+  stripeSessionId String?
+  createdAt       DateTime @default(now())
 }

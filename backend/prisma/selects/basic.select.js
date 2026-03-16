@@ -49,6 +49,7 @@ export const basicOrderInfo = {
 }
 
 export const basicShippingAddressInfo = {
+    id: true,
     street: true,
     houseNo: true,
     neighborhood: true,

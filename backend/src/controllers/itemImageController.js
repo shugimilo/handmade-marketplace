@@ -63,7 +63,7 @@ export async function deleteItemImage(req, res) {
             return res.status(404).json({ message: "Image not found" })
         }
 
-        if (!image.itemId !== itemId) {
+        if (image.itemId !== itemId) {
             return res.status(400).json({ message: "Image does not belong to this item" })
         }
 

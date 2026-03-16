@@ -31,6 +31,14 @@ export async function createOrder(req, res) {
             return res.status(400).json({ message: "Cart is empty" })
         }
 
+        const ownItem = cart.cartItems.find(ci => ci.item.authorId === userId);
+
+        if (ownItem) {
+            return res.status(400).json({
+                message: "You cannot purchase your own item"
+            });
+        }
+
         // GROUP ITEMS BY SELLER
         const itemsBySeller = {}
 

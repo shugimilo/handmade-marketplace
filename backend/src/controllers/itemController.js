@@ -13,7 +13,7 @@ export async function createItem(req, res) {
                 price,
                 pickupAvailable,
                 deliveryAvailable,
-                authorId: req.userId,
+                authorId: Number(req.userId),
                 categories: {
                     connect: categories.map(id => ({ id }))
                 }

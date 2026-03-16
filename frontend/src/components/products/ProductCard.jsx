@@ -4,8 +4,8 @@ import { useCart } from "../../context/CartContext";
 export default function ProductCard({ item }) {
   const { addToCart } = useCart();
 
-  const imageUrl = item.images?.[0]?.url
-    ? `http://localhost:3000${item.images[0].url}`
+  const imageUrl = item.itemImages?.[0]?.url
+    ? `http://localhost:3000${item.itemImages[0].url}`
     : "/placeholder.png";
 
   return (
