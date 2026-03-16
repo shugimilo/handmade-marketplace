@@ -4,6 +4,8 @@ import { getItemById, deleteItem } from "../api/itemsApi";
 import { useCart } from "../context/CartContext";
 import { getCurrentUserIdFromToken } from "../utils/auth";
 import { useFavorites } from "../context/FavoritesContext";
+import { createReview } from "../api/reviewsApi";
+import { useAuth } from "../context/AuthContext";
 
 export default function ItemPage() {
   const { id } = useParams();
@@ -15,6 +17,14 @@ export default function ItemPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [error, setError] = useState("");
   const { isFavorite, toggleFavorite } = useFavorites();
+
+  const { isAuthenticated } = useAuth();
+
+  const [reviewForm, setReviewForm] = useState({
+    rating: 5,
+    comment: ""
+  });
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
 
   const currentUserId = getCurrentUserIdFromToken();
 
@@ -61,6 +71,42 @@ export default function ItemPage() {
     }
   };
 
+  const handleReviewChange = (e) => {
+  const { name, value } = e.target;
+
+  setReviewForm((prev) => ({
+    ...prev,
+    [name]: name === "rating" ? Number(value) : value
+  }));
+};
+
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      setReviewSubmitting(true);
+
+      await createReview(item.id, {
+        rating: reviewForm.rating,
+        comment: reviewForm.comment
+      });
+
+      const data = await getItemById(id);
+      setItem(data.item || data);
+
+      setReviewForm({
+        rating: 5,
+        comment: ""
+      });
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || "Failed to submit review.");
+    } finally {
+      setReviewSubmitting(false);
+    }
+  };
+
   if (loading) return <p>Loading item...</p>;
   if (error) return <p>{error}</p>;
   if (!item) return <p>Item not found.</p>;
@@ -75,6 +121,14 @@ export default function ItemPage() {
     : "/placeholder.png";
 
   const itemIsFavorite = isFavorite(item.id);
+
+  const averageRating =
+  item.reviews && item.reviews.length > 0
+    ? (
+        item.reviews.reduce((sum, r) => sum + r.rating, 0) /
+        item.reviews.length
+      ).toFixed(1)
+    : null;
 
   const goToPreviousImage = () => {
     if (!hasImages) return;
@@ -142,6 +196,23 @@ export default function ItemPage() {
       <div className="item-page__content">
         <h1>{item.name}</h1>
 
+        {averageRating && (
+          <div className="item-page__rating-summary">
+            <span className="item-page__rating-stars">
+              {"★".repeat(Math.floor(averageRating))}
+              {"☆".repeat(5 - Math.floor(averageRating))}
+            </span>
+
+            <span className="item-page__rating-number">
+              {averageRating} / 5
+            </span>
+
+            <span className="item-page__rating-count">
+              {" "}({item.reviews.length} review{item.reviews.length !== 1 ? "s" : ""})
+            </span>
+          </div>
+        )}
+
         <p className="item-page__price">{item.price} RSD</p>
 
         <p>{item.description}</p>
@@ -200,8 +271,9 @@ export default function ItemPage() {
         <button
           className="item-page__cart-btn"
           onClick={() => addToCart(item.id, 1)}
+          disabled={isOwner}
         >
-          Add to cart
+          {isOwner ? "You own this item" : "Add to cart"}
         </button>
 
         {isOwner && (
@@ -217,25 +289,94 @@ export default function ItemPage() {
         )}
       </div>
 
-      {item.reviews?.length > 0 && (
-        <div className="item-page__reviews">
-          <h2>Reviews</h2>
 
-          {item.reviews.map((review) => (
+      <div className="item-page__reviews">
+        <h2>Reviews</h2>
+
+        {isAuthenticated && !isOwner && (
+          <form className="review-form" onSubmit={handleReviewSubmit}>
+            <label>
+              Rating
+              <select
+                name="rating"
+                value={reviewForm.rating}
+                onChange={handleReviewChange}
+              >
+                <option value={5}>5</option>
+                <option value={4}>4</option>
+                <option value={3}>3</option>
+                <option value={2}>2</option>
+                <option value={1}>1</option>
+              </select>
+            </label>
+
+            <textarea
+              name="comment"
+              placeholder="Write your review..."
+              value={reviewForm.comment}
+              onChange={handleReviewChange}
+              rows={4}
+            />
+
+            <button type="submit" disabled={reviewSubmitting}>
+              {reviewSubmitting ? "Submitting..." : "Submit Review"}
+            </button>
+          </form>
+        )}
+
+        {item.reviews?.length > 0 ? (
+          item.reviews.map((review) => (
             <div key={review.id} className="item-page__review">
-              <p>
-                <strong>
-                  {review.user?.username || review.user?.firstName || "User"}
-                </strong>
+
+              <div className="item-page__review-header">
+
+                <img
+                  className="item-page__review-avatar"
+                  src={
+                    review.reviewer?.pfpUrl
+                      ? `http://localhost:3000${review.reviewer.pfpUrl}`
+                      : "/placeholder.png"
+                  }
+                  alt="User avatar"
+                />
+
+                <div className="item-page__review-meta">
+                  <strong>
+                    <Link
+                      to={
+                        currentUserId === review.reviewer?.id
+                          ? "/me"
+                          : `/users/${review.reviewer?.id}`
+                      }
+                    >
+                      {review.reviewer?.username || "User"}
+                    </Link>
+                  </strong>
+
+                  <p className="item-page__review-date">
+                    {new Date(review.reviewedOn).toLocaleDateString()}
+                  </p>
+                </div>
+
+              </div>
+
+              <p className="item-page__review-rating">
+                {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
               </p>
 
-              {review.rating && <p>Rating: {review.rating}/5</p>}
+              {review.comment && (
+                <p className="item-page__review-comment">
+                  {review.comment}
+                </p>
+              )}
 
-              <p>{review.comment}</p>
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        ) : (
+          <p>No reviews yet.</p>
+        )}
+      </div>
+
     </div>
   );
 }

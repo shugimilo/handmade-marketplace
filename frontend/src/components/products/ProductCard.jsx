@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { useFavorites } from "../../context/FavoritesContext";
+import { getCurrentUserIdFromToken } from "../../utils/auth";
 
 export default function ProductCard({ item }) {
   const { addToCart } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
+
+  const currentUserId = getCurrentUserIdFromToken();
+  const isOwner = currentUserId === item.authorId;
 
   const imageUrl = item.itemImages?.[0]?.url
     ? `http://localhost:3000${item.itemImages[0].url}`
@@ -36,8 +40,11 @@ export default function ProductCard({ item }) {
 
       <p>{item.price} {item.currency || "RSD"}</p>
 
-      <button onClick={() => addToCart(item.id, 1)}>
-        Add to cart
+      <button
+        onClick={() => addToCart(item.id, 1)}
+        disabled={isOwner}
+      >
+        {isOwner ? "Your item" : "Add to cart"}
       </button>
     </div>
   );

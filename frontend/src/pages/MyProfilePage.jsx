@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   getCurrentUser,
   updateCurrentUser,
@@ -188,10 +189,14 @@ export default function MyProfilePage() {
           {user.items?.length > 0 ? (
             <div className="profile-list">
               {user.items.map((item) => (
-                <div key={item.id} className="profile-list-item">
+                <Link
+                  key={item.id}
+                  to={`/items/${item.id}`}
+                  className="profile-list-item profile-list-item--link"
+                >
                   <p><strong>{item.name}</strong></p>
                   <p>{item.price} {item.currency || "RSD"}</p>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (
@@ -205,10 +210,14 @@ export default function MyProfilePage() {
           {user.favorites?.length > 0 ? (
             <div className="profile-list">
               {user.favorites.map((favorite) => (
-                <div key={favorite.id} className="profile-list-item">
+                <Link
+                  key={favorite.id}
+                  to={`/items/${favorite.item?.id}`}
+                  className="profile-list-item profile-list-item--link"
+                >
                   <p><strong>{favorite.item?.name}</strong></p>
                   <p>{favorite.item?.price} {favorite.item?.currency || "RSD"}</p>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (
@@ -224,7 +233,11 @@ export default function MyProfilePage() {
               {user.reviews.map((review) => (
                 <div key={review.id} className="profile-list-item">
                   <p>
-                    <strong>{review.item?.name}</strong>
+                    <strong>
+                      <Link to={`/items/${review.item?.id}`}>
+                        {review.item?.name}
+                      </Link>
+                    </strong>
                   </p>
                   <p>Rating: {review.rating}/5</p>
                   <p>{review.comment}</p>

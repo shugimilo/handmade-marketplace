@@ -2,18 +2,26 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import debounce from "lodash.debounce";
 import { useAuth } from "../../context/AuthContext";
+import { useCart } from "../../context/CartContext";
 import { searchAll } from "../../api/searchApi";
-import { getProfileUrl } from "../../utils/profileNavigation";
+import { getCurrentUser } from "../../api/usersApi";
 
 export default function Navbar() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, token } = useAuth();
+  const { cart } = useCart();
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const dropdownRef = useRef(null);
+
+  const cartItemCount = cart?.cart?.cartItems?.reduce(
+    (sum, cartItem) => sum + cartItem.quantity,
+    0
+  ) || 0;
 
   const runSearch = debounce(async (q) => {
     if (q.trim().length < 2) {
@@ -55,8 +63,28 @@ export default function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    const loadCurrentUser = async () => {
+      if (!token) {
+        setCurrentUser(null);
+        return;
+      }
+
+      try {
+        const data = await getCurrentUser();
+        setCurrentUser(data.user || null);
+      } catch (err) {
+        console.error("Failed to load navbar user:", err);
+        setCurrentUser(null);
+      }
+    };
+
+    loadCurrentUser();
+  }, [token]);
+
   const handleLogout = () => {
     logout();
+    setCurrentUser(null);
     navigate("/");
   };
 
@@ -77,9 +105,12 @@ export default function Navbar() {
     setSearchQuery("");
   };
 
+  const profileImageUrl = currentUser?.pfpUrl
+    ? `http://localhost:3000${currentUser.pfpUrl}`
+    : "/placeholder.png";
+
   return (
     <nav className="navbar">
-
       <div className="navbar__left">
         <Link to="/" className="navbar__brand">
           Handmade Marketplace
@@ -99,7 +130,6 @@ export default function Navbar() {
 
         {showDropdown && results && (
           <div className="search-dropdown">
-
             {results.items?.length > 0 && (
               <div className="search-dropdown-section">
                 <p className="search-dropdown-title">Items</p>
@@ -141,14 +171,18 @@ export default function Navbar() {
                     ? `http://localhost:3000${user.pfpUrl}`
                     : "/placeholder.png";
 
+                  const profileUrl =
+                    currentUser && Number(user.id) === Number(currentUser.id)
+                      ? "/me"
+                      : `/users/${user.id}`;
+
                   return (
                     <div
                       key={user.id}
                       className="search-dropdown-item search-dropdown-item--user"
-                      onClick={() => handleNavigate(getProfileUrl(user.id))}
+                      onClick={() => handleNavigate(profileUrl)}
                     >
                       <img src={avatarUrl} alt={user.username} />
-
                       <span>{user.username}</span>
                     </div>
                   );
@@ -164,7 +198,7 @@ export default function Navbar() {
                   <div
                     key={category.id}
                     className="search-dropdown-item"
-                    onClick={() => handleNavigate(`/categories/${category.id}/items`)}
+                    onClick={() => handleNavigate(`/categories/${category.id}`)}
                   >
                     {category.name}
                   </div>
@@ -180,20 +214,34 @@ export default function Navbar() {
             >
               See all results →
             </div>
-
           </div>
         )}
       </div>
 
       <div className="navbar__right">
         <Link to="/">Home</Link>
-        <Link to="/cart">Cart</Link>
+        <Link to="/categories">Browse</Link>
+        <Link to="/cart" className="navbar__cart-link">
+          Cart
+          {cartItemCount > 0 && (
+            <span className="navbar__cart-count">{cartItemCount}</span>
+          )}
+        </Link>
 
         {isAuthenticated ? (
           <>
             <Link to="/orders">Orders</Link>
-            <Link to="/me">My Profile</Link>
             <Link to="/items/new">Sell Item</Link>
+
+            <Link to="/me" className="navbar__profile-link">
+              <img
+                src={profileImageUrl}
+                alt="Profile"
+                className="navbar__profile-avatar"
+              />
+              <span>{currentUser?.username || "Profile"}</span>
+            </Link>
+
             <button className="navbar__logout" onClick={handleLogout}>
               Logout
             </button>
@@ -205,7 +253,6 @@ export default function Navbar() {
           </>
         )}
       </div>
-
     </nav>
   );
 }

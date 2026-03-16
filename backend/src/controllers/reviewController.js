@@ -1,15 +1,36 @@
 import prisma from '../prismaClient.js'
 
 export async function createReview(req, res) {
-    const userId = Number(req.userId)
-    const { rating, comment } = req.body
-    const itemId = Number(req.params.id)
+    const userId = Number(req.userId);
+    const { rating, comment } = req.body;
+    const itemId = Number(req.params.id);
 
     if (rating < 1 || rating > 5) {
-        return res.status(400).json({ message: "Rating must be between 1 and 5" })
+        return res.status(400).json({ message: "Rating must be between 1 and 5" });
     }
 
     try {
+        const eligibleOrder = await prisma.order.findFirst({
+            where: {
+                buyerId: userId,
+                status: {
+                    in: ["Delivered"]
+                },
+                orderItems: {
+                    some: {
+                        itemId
+                    }
+                }
+            },
+            select: { id: true }
+        });
+
+        if (!eligibleOrder) {
+            return res.status(403).json({
+                message: "You can only review items you have purchased."
+            });
+        }
+
         const review = await prisma.review.create({
             data: {
                 itemId,
@@ -17,15 +38,15 @@ export async function createReview(req, res) {
                 rating,
                 comment
             }
-        })
+        });
 
-        res.json({ review })
+        return res.json({ review });
     } catch (err) {
-        if (err.code === 'P2002') {
-            return res.status(400).json({ message: "You already reviewed this item" })
+        if (err.code === "P2002") {
+            return res.status(400).json({ message: "You already reviewed this item" });
         }
 
-        return res.status(500).json({ message: err.message })
+        return res.status(500).json({ message: err.message });
     }
 }
 

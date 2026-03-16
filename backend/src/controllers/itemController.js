@@ -36,7 +36,10 @@ export async function getAllItems(req, res) {
             prisma.item.findMany({
                 select: basicItemInfo,
                 skip,
-                take: limit
+                take: limit,
+                orderBy: {
+                    id: "desc"
+                }
             }),
             prisma.item.count()
         ])

@@ -28,12 +28,16 @@ export const itemOwnerView = {
     },
     reviews: {
         select: {
+            id: true,
+            rating: true,
+            comment: true,
+            reviewedOn: true,
             reviewer: {
                 select: basicUserInfo
             }
         }
     }
-}
+};
 
 export const publicItemView = {
     id: true,
@@ -50,6 +54,10 @@ export const publicItemView = {
     itemImages: true,
     reviews: {
         select: {
+            id: true,
+            rating: true,
+            comment: true,
+            reviewedOn: true,
             reviewer: {
                 select: basicUserInfo
             }
@@ -61,4 +69,4 @@ export const publicItemView = {
             name: true
         }
     }
-}
+};
