@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getUserProfile } from "../api/usersApi";
+import ProductCard from "../components/products/ProductCard";
+
+//import "../styles/PublicProfilePage.css";
+import "../styles/MyProfilePage.css";
+import "../styles/ProductCard.css";
 
 export default function ProfilePage() {
   const { id } = useParams();
@@ -68,32 +73,10 @@ export default function ProfilePage() {
           <h2>Items</h2>
 
           {user.items?.length > 0 ? (
-            <div className="profile-items-grid">
-              {user.items.map((item) => {
-                const imageUrl = item.itemImages?.[0]?.url
-                  ? `http://localhost:3000${item.itemImages[0].url}`
-                  : "/placeholder.png";
-
-                return (
-                  <Link
-                    key={item.id}
-                    to={`/items/${item.id}`}
-                    className="profile-item-card"
-                  >
-                    <img
-                      src={imageUrl}
-                      alt={item.name}
-                      className="profile-item-card__image"
-                    />
-                    <div className="profile-item-card__content">
-                      <h3>{item.name}</h3>
-                      <p>
-                        {item.price} {item.currency || "RSD"}
-                      </p>
-                    </div>
-                  </Link>
-                );
-              })}
+            <div className="products-grid">
+              {user.items.map((item) => (
+                <ProductCard key={item.id} item={item} />
+              ))}
             </div>
           ) : (
             <p>This user has not listed any items yet.</p>

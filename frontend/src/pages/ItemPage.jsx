@@ -7,6 +7,9 @@ import { useFavorites } from "../context/FavoritesContext";
 import { createReview } from "../api/reviewsApi";
 import { useAuth } from "../context/AuthContext";
 
+import "../styles/ItemPage.css";
+import formatCategoryName from "../utils/categoryName";
+
 export default function ItemPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -72,13 +75,13 @@ export default function ItemPage() {
   };
 
   const handleReviewChange = (e) => {
-  const { name, value } = e.target;
+    const { name, value } = e.target;
 
-  setReviewForm((prev) => ({
-    ...prev,
-    [name]: name === "rating" ? Number(value) : value
-  }));
-};
+    setReviewForm((prev) => ({
+      ...prev,
+      [name]: name === "rating" ? Number(value) : value
+    }));
+  };
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
@@ -107,9 +110,9 @@ export default function ItemPage() {
     }
   };
 
-  if (loading) return <p>Loading item...</p>;
-  if (error) return <p>{error}</p>;
-  if (!item) return <p>Item not found.</p>;
+  if (loading) return <p className="item-page__status">Loading item...</p>;
+  if (error) return <p className="item-page__status">{error}</p>;
+  if (!item) return <p className="item-page__status">Item not found.</p>;
 
   const isOwner = currentUserId === item.authorId;
 
@@ -123,12 +126,12 @@ export default function ItemPage() {
   const itemIsFavorite = isFavorite(item.id);
 
   const averageRating =
-  item.reviews && item.reviews.length > 0
-    ? (
-        item.reviews.reduce((sum, r) => sum + r.rating, 0) /
-        item.reviews.length
-      ).toFixed(1)
-    : null;
+    item.reviews && item.reviews.length > 0
+      ? (
+          item.reviews.reduce((sum, r) => sum + r.rating, 0) /
+          item.reviews.length
+        ).toFixed(1)
+      : null;
 
   const goToPreviousImage = () => {
     if (!hasImages) return;
@@ -158,13 +161,23 @@ export default function ItemPage() {
         {images.length > 1 && (
           <>
             <div className="item-page__image-controls">
-              <button type="button" onClick={goToPreviousImage}>
+              <button
+                type="button"
+                className="item-page__carousel-btn"
+                onClick={goToPreviousImage}
+              >
                 Previous
               </button>
-              <span>
+
+              <span className="item-page__image-counter">
                 {currentImageIndex + 1} / {images.length}
               </span>
-              <button type="button" onClick={goToNextImage}>
+
+              <button
+                type="button"
+                className="item-page__carousel-btn"
+                onClick={goToNextImage}
+              >
                 Next
               </button>
             </div>
@@ -194,7 +207,7 @@ export default function ItemPage() {
       </div>
 
       <div className="item-page__content">
-        <h1>{item.name}</h1>
+        <h1 className="item-page__title">{item.name}</h1>
 
         {averageRating && (
           <div className="item-page__rating-summary">
@@ -208,14 +221,14 @@ export default function ItemPage() {
             </span>
 
             <span className="item-page__rating-count">
-              {" "}({item.reviews.length} review{item.reviews.length !== 1 ? "s" : ""})
+              ({item.reviews.length} review{item.reviews.length !== 1 ? "s" : ""})
             </span>
           </div>
         )}
 
         <p className="item-page__price">{item.price} RSD</p>
 
-        <p>{item.description}</p>
+        <p className="item-page__description">{item.description}</p>
 
         <div className="item-page__meta">
           <p>
@@ -229,9 +242,10 @@ export default function ItemPage() {
         </div>
 
         {item.author && (
-          <p>
+          <p className="item-page__seller">
             <strong>Seller:</strong>{" "}
             <Link
+              className="item-page__seller-link"
               to={
                 currentUserId === item.author.id
                   ? "/me"
@@ -253,51 +267,59 @@ export default function ItemPage() {
                   to={`/categories/${category.id}`}
                   className="item-page__category-badge"
                 >
-                  {category.name}
+                  {formatCategoryName(category.name)}
                 </Link>
               ))}
             </div>
           </div>
         )}
 
-        <button
-          type="button"
-          className="item-page__favorite-btn"
-          onClick={handleToggleFavorite}
-        >
-          {itemIsFavorite ? "♥ Remove from favorites" : "♡ Add to favorites"}
-        </button>
+        <div className="item-page__actions">
+          <button
+            type="button"
+            className="item-page__favorite-btn"
+            onClick={handleToggleFavorite}
+          >
+            {itemIsFavorite ? "♥ Remove from favorites" : "♡ Add to favorites"}
+          </button>
 
-        <button
-          className="item-page__cart-btn"
-          onClick={() => addToCart(item.id, 1)}
-          disabled={isOwner}
-        >
-          {isOwner ? "You own this item" : "Add to cart"}
-        </button>
+          <button
+            className="item-page__cart-btn"
+            onClick={() => addToCart(item.id, 1)}
+            disabled={isOwner}
+          >
+            {isOwner ? "You own this item" : "Add to cart"}
+          </button>
+        </div>
 
         {isOwner && (
           <div className="item-page__owner-actions">
             <Link to={`/items/${item.id}/edit`}>
-              <button>Edit Item</button>
+              <button type="button" className="item-page__owner-btn">
+                Edit Item
+              </button>
             </Link>
 
-            <button onClick={handleDeleteItem}>
+            <button
+              type="button"
+              className="item-page__owner-btn item-page__owner-btn--danger"
+              onClick={handleDeleteItem}
+            >
               Delete Item
             </button>
           </div>
         )}
       </div>
 
-
       <div className="item-page__reviews">
-        <h2>Reviews</h2>
+        <h2 className="item-page__reviews-title">Reviews</h2>
 
         {isAuthenticated && !isOwner && (
           <form className="review-form" onSubmit={handleReviewSubmit}>
-            <label>
+            <label className="review-form__label">
               Rating
               <select
+                className="review-form__select"
                 name="rating"
                 value={reviewForm.rating}
                 onChange={handleReviewChange}
@@ -311,6 +333,7 @@ export default function ItemPage() {
             </label>
 
             <textarea
+              className="review-form__textarea"
               name="comment"
               placeholder="Write your review..."
               value={reviewForm.comment}
@@ -318,7 +341,11 @@ export default function ItemPage() {
               rows={4}
             />
 
-            <button type="submit" disabled={reviewSubmitting}>
+            <button
+              className="review-form__submit"
+              type="submit"
+              disabled={reviewSubmitting}
+            >
               {reviewSubmitting ? "Submitting..." : "Submit Review"}
             </button>
           </form>
@@ -327,9 +354,7 @@ export default function ItemPage() {
         {item.reviews?.length > 0 ? (
           item.reviews.map((review) => (
             <div key={review.id} className="item-page__review">
-
               <div className="item-page__review-header">
-
                 <img
                   className="item-page__review-avatar"
                   src={
@@ -341,8 +366,9 @@ export default function ItemPage() {
                 />
 
                 <div className="item-page__review-meta">
-                  <strong>
+                  <strong className="item-page__review-author">
                     <Link
+                      className="item-page__review-author-link"
                       to={
                         currentUserId === review.reviewer?.id
                           ? "/me"
@@ -357,11 +383,11 @@ export default function ItemPage() {
                     {new Date(review.reviewedOn).toLocaleDateString()}
                   </p>
                 </div>
-
               </div>
 
               <p className="item-page__review-rating">
-                {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
+                {"★".repeat(review.rating)}
+                {"☆".repeat(5 - review.rating)}
               </p>
 
               {review.comment && (
@@ -369,14 +395,12 @@ export default function ItemPage() {
                   {review.comment}
                 </p>
               )}
-
             </div>
           ))
         ) : (
-          <p>No reviews yet.</p>
+          <p className="item-page__no-reviews">No reviews yet.</p>
         )}
       </div>
-
     </div>
   );
 }

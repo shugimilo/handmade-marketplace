@@ -1,0 +1,37 @@
+/*----------- Item creation page styling -----------*/
+
+.create-item-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.create-item-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.create-item-form input,
+.create-item-form textarea {
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.create-item-checkboxes {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.create-item-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.create-item-category {
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  padding: 8px 12px;
+}

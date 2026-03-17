@@ -3,6 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { login as loginRequest } from "../api/authApi";
 import { useAuth } from "../context/AuthContext";
 
+import "../styles/AuthPage.css";
+import "../styles/Feedback.css";
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -72,7 +75,7 @@ export default function LoginPage() {
           required
         />
 
-        {error && <p className="auth-error">{error}</p>}
+        {error && <p className="error-message">{error}</p>}
 
         <button type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}

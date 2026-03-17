@@ -2,19 +2,18 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getCategories } from "../api/categoriesApi";
 
-const pastelColors = [
-  "#FFD6E0",
-  "#FFE5B4",
-  "#FFF3B0",
-  "#D4F8E8",
-  "#CDE7FF",
-  "#E4D1FF",
-  "#FADADD",
-  "#E8F8F5"
-];
+import "../styles/CategoriesPage.css";
+import formatCategoryName from "../utils/categoryName";
 
-function getPastelColor(id) {
-  return pastelColors[id % pastelColors.length];
+function getCategoryCardClass(index) {
+  const variants = [
+    "category-card--cream",
+    "category-card--yellow",
+    "category-card--blue",
+    "category-card--orange"
+  ];
+
+  return variants[index % variants.length];
 }
 
 export default function CategoriesPage() {
@@ -42,16 +41,15 @@ export default function CategoriesPage() {
       <h1>Browse Categories</h1>
 
       <div className="categories-grid">
-      {categories.map((category) => (
+        {categories.map((category, index) => (
           <Link
-          key={category.id}
-          to={`/categories/${category.id}`}
-          className="category-card"
-          style={{ backgroundColor: getPastelColor(category.id) }}
+            key={category.id}
+            to={`/categories/${category.id}`}
+            className={`category-card ${getCategoryCardClass(index)}`}
           >
-          {category.name}
+            {formatCategoryName(category.name)}
           </Link>
-      ))}
+        ))}
     </div>
     </div>
   );

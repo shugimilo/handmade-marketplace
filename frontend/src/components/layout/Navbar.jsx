@@ -7,6 +7,9 @@ import { searchAll } from "../../api/searchApi";
 import { getCurrentUser } from "../../api/usersApi";
 import { isCurrentUserAdmin } from "../../utils/admin";
 
+import "../../styles/Navbar.css";
+import formatCategoryName from "../../utils/categoryName";
+
 export default function Navbar() {
   const { isAuthenticated, logout, token } = useAuth();
   const { cart } = useCart();
@@ -116,7 +119,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar__left">
         <Link to="/" className="navbar__brand">
-          Handmade Marketplace
+          Handmade.
         </Link>
       </div>
 
@@ -203,7 +206,7 @@ export default function Navbar() {
                     className="search-dropdown-item"
                     onClick={() => handleNavigate(`/categories/${category.id}`)}
                   >
-                    {category.name}
+                    {formatCategoryName(category.name)}
                   </div>
                 ))}
               </div>

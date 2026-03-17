@@ -1,0 +1,26 @@
+:root {
+  --color-bg: rgb(244, 241, 224);
+  --color-accent: rgb(235, 80, 39);
+  --color-secondary: rgb(48, 119, 181);
+  --color-highlight: rgb(246, 205, 69);
+
+  --color-text: rgb(24, 24, 24);
+  --color-text-soft: rgb(88, 84, 78);
+  --color-surface: rgb(250, 247, 235);
+  --color-surface-2: rgb(255, 251, 242);
+  --color-border: rgba(24, 24, 24, 0.1);
+
+  --font-brand: "Rubik Beastly", system-ui, sans-serif;
+  --font-heading: "Lexend", system-ui, sans-serif;
+  --font-body: "Special Elite", serif;
+  --font-ui: "Lexend", system-ui, sans-serif;
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.08);
+
+  --container-width: 1280px;
+}

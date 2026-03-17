@@ -1,0 +1,28 @@
+.item-page__owner-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.edit-item-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.edit-item-image-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 180px;
+}
+
+.edit-item-image-card__img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}

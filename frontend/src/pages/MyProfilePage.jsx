@@ -6,6 +6,8 @@ import {
   uploadProfilePicture
 } from "../api/usersApi";
 
+import "../styles/MyProfilePage.css";
+
 export default function MyProfilePage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);

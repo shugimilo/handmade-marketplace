@@ -1,0 +1,333 @@
+:root {
+  --color-bg: rgb(244, 241, 224);
+  --color-accent: rgb(235, 80, 39);
+  --color-text: rgb(34, 34, 34);
+  --color-muted: rgb(100, 96, 88);
+  --color-surface: rgb(250, 248, 238);
+  --color-border: rgba(34, 34, 34, 0.08);
+  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.08);
+  --radius-lg: 28px;
+  --radius-md: 18px;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.home-page {
+  width: min(1280px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 32px 0 80px;
+}
+
+.home-status,
+.home-empty {
+  font-size: 1rem;
+  color: var(--color-muted);
+  padding: 40px 0;
+}
+
+.home-hero {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 48px;
+  align-items: center;
+  padding: 32px 0 72px;
+}
+
+.home-hero__eyebrow,
+.section-heading__eyebrow {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.home-hero__text h1 {
+  margin: 0;
+  font-size: clamp(3.2rem, 8vw, 6.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  color: var(--color-accent);
+  max-width: 8ch;
+}
+
+.home-hero__description {
+  font-family: var(--font-body);
+  max-width: 560px;
+  margin: 24px 0 0;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+
+.home-hero__actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+
+.home-hero__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.home-hero__button--primary {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+.home-hero__button--primary:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.home-hero__button--secondary {
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+.home-hero__button--secondary:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.home-hero__image-wrapper {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  min-height: 560px;
+  background-color: #ddd;
+}
+
+.home-hero__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 560px;
+  object-fit: cover;
+}
+
+.home-categories,
+.home-products {
+  padding-top: 32px;
+}
+
+.section-heading {
+  margin-bottom: 28px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.section-heading p:last-child {
+  font-family: var(--font-body);
+  max-width: 640px;
+  margin-top: 14px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+
+.category-carousel {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 8px 4px 14px;
+  cursor: grab;
+  user-select: none;
+  scrollbar-width: none;
+}
+
+.category-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.category-carousel--dragging {
+  cursor: grabbing;
+}
+
+.category-pill {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+  padding: 18px 26px;
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.category-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  border-color: rgba(235, 80, 39, 0.25);
+}
+
+.category-pill--cream {
+  background: linear-gradient(
+    135deg,
+    rgb(255, 248, 233) 0%,
+    rgb(244, 241, 224) 100%
+  );
+  color: var(--color-text);
+}
+
+.category-pill--yellow {
+  background: linear-gradient(
+    135deg,
+    rgb(250, 221, 111) 0%,
+    rgb(246, 205, 69) 100%
+  );
+  color: var(--color-text);
+}
+
+.category-pill--blue {
+  background: linear-gradient(
+    135deg,
+    rgb(72, 138, 196) 0%,
+    rgb(48, 119, 181) 100%
+  );
+  color: rgb(244, 241, 224);
+  border-color: rgba(48, 119, 181, 0.35);
+}
+
+.category-pill--orange {
+  background: linear-gradient(
+    135deg,
+    rgb(242, 108, 72) 0%,
+    rgb(235, 80, 39) 100%
+  );
+  color: rgb(255, 248, 233);
+  border-color: rgba(235, 80, 39, 0.35);
+}
+
+.home-products {
+  padding-top: 72px;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding-top: 40px;
+}
+
+.pagination button {
+  min-width: 110px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 999px;
+  background-color: var(--color-accent);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.pagination button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  color: var(--color-muted);
+  font-weight: 500;
+}
+
+@media (max-width: 1100px) {
+  .home-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero__image-wrapper,
+  .home-hero__image {
+    min-height: 420px;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .home-page {
+    width: min(100% - 32px, 1280px);
+  }
+
+  .home-hero {
+    gap: 28px;
+    padding: 12px 0 48px;
+  }
+
+  .home-hero__text h1 {
+    max-width: 100%;
+  }
+
+  .home-hero__description {
+    font-size: 1rem;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (max-width: 520px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-hero__button {
+    width: 100%;
+  }
+}

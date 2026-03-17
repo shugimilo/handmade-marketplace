@@ -9,6 +9,8 @@ import {
 } from "../api/adminApi";
 import { isCurrentUserAdmin } from "../utils/admin";
 
+import "../styles/AdminPage.css";
+
 export default function AdminPage() {
   const [tab, setTab] = useState("users");
   const [loading, setLoading] = useState(true);

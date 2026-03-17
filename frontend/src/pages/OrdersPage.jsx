@@ -6,6 +6,9 @@ import {
   updateOrderStatus
 } from "../api/ordersApi";
 
+import "../styles/OrdersPage.css";
+import "../styles/Feedback.css";
+
 export default function OrdersPage() {
   const location = useLocation();
 

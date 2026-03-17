@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { getCategoryItems } from "../api/categoriesApi";
 import ProductCard from "../components/products/ProductCard";
 
+import "../styles/CategoryPage.css";
+
 export default function CategoryPage() {
   const { id } = useParams();
 

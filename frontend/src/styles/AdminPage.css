@@ -1,0 +1,88 @@
+.admin-page {
+  width: min(1200px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 32px 0 72px;
+}
+
+.admin-page h1 {
+  margin: 0 0 20px;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.05;
+  color: var(--color-accent);
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 20px 0 24px;
+}
+
+.admin-tabs button {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-ui);
+  font-weight: 700;
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.admin-tabs button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(235, 80, 39, 0.24);
+}
+
+.admin-tabs__active {
+  font-weight: 700;
+  border-color: transparent !important;
+  background-color: var(--color-accent) !important;
+  color: white !important;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-2);
+  box-shadow: var(--shadow-soft);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-ui);
+  color: var(--color-text);
+}
+
+.admin-table th {
+  background-color: rgba(246, 205, 69, 0.2);
+  font-weight: 700;
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table td p {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .admin-page {
+    width: min(100% - 32px, 1200px);
+    padding: 24px 0 56px;
+  }
+}

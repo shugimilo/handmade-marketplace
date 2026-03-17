@@ -1,0 +1,27 @@
+.success-message {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(72, 187, 120, 0.35);
+  background-color: rgba(72, 187, 120, 0.12);
+  color: #1f7a4d;
+
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  margin-bottom: 16px;
+}
+
+.error-message {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(235, 80, 39, 0.35);
+  background-color: rgba(235, 80, 39, 0.08);
+  color: #b42318;
+
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  margin-bottom: 16px;
+}

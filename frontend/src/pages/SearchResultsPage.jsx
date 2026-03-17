@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { searchAll } from "../api/searchApi";
+import { getProfileUrl } from "../utils/profileNavigation"
+
+import "../styles/SearchPage.css"
+import formatCategoryName from "../utils/categoryName";
 
 export default function SearchResultsPage() {
   const location = useLocation();
@@ -137,7 +141,7 @@ export default function SearchResultsPage() {
                 to={`/categories/${category.id}`}
                 className="item-page__category-badge"
               >
-                {category.name}
+                {formatCategoryName(category.name)}
               </Link>
             ))}
           </div>

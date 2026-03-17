@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { getCategories } from "../api/categoriesApi";
 import { createItem, uploadItemImage } from "../api/itemsApi";
 
+import "../styles/CreateItemPage.css";
+import formatCategoryName from "../utils/categoryName";
+
 export default function CreateItemPage() {
   const navigate = useNavigate();
 
@@ -176,7 +179,7 @@ export default function CreateItemPage() {
                   checked={formData.categories.includes(category.id)}
                   onChange={() => handleCategoryChange(category.id)}
                 />
-                {category.name}
+                {formatCategoryName(category.name)}
               </label>
             ))}
           </div>

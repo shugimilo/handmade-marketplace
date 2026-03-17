@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
-import { getShippingAddresses, createShippingAddress } from "../api/shippingAddressesApi";
+import {
+  getShippingAddresses,
+  createShippingAddress
+} from "../api/shippingAddressesApi";
 import { createOrder } from "../api/ordersApi";
 import { createPayment } from "../api/paymentsApi";
+
+import "../styles/CheckoutPage.css";
 
 export default function CheckoutPage() {
   const { cart, loading: cartLoading, fetchCart } = useCart();
@@ -109,7 +114,9 @@ export default function CheckoutPage() {
     }
   };
 
-  if (cartLoading || loading) return <p>Loading checkout...</p>;
+  if (cartLoading || loading) {
+    return <p className="checkout-page__status">Loading checkout...</p>;
+  }
 
   const cartData = cart?.cart;
   const total = cart?.total || 0;
@@ -118,7 +125,7 @@ export default function CheckoutPage() {
     return (
       <div className="checkout-page">
         <h1>Checkout</h1>
-        <p>Your cart is empty.</p>
+        <p className="checkout-page__empty">Your cart is empty.</p>
       </div>
     );
   }
@@ -127,7 +134,7 @@ export default function CheckoutPage() {
     <div className="checkout-page">
       <h1>Checkout</h1>
 
-      {error && <p className="auth-error">{error}</p>}
+      {error && <p className="checkout-page__error">{error}</p>}
 
       <div className="checkout-layout">
         <div className="checkout-section">
@@ -138,21 +145,27 @@ export default function CheckoutPage() {
               {addresses.map((address) => (
                 <label key={address.id} className="checkout-address-card">
                   <input
+                    className="checkout-address-card__radio"
                     type="radio"
                     name="selectedAddress"
                     value={address.id}
                     checked={String(address.id) === selectedAddressId}
                     onChange={(e) => setSelectedAddressId(e.target.value)}
                   />
-                  <div>
-                    <p>{address.street} {address.houseNo}</p>
-                    <p>{address.neighborhood}, {address.city}</p>
+
+                  <div className="checkout-address-card__content">
+                    <p className="checkout-address-card__line">
+                      {address.street} {address.houseNo}
+                    </p>
+                    <p className="checkout-address-card__line">
+                      {address.neighborhood}, {address.city}
+                    </p>
                   </div>
                 </label>
               ))}
             </div>
           ) : (
-            <p>No saved addresses yet.</p>
+            <p className="checkout-page__empty">No saved addresses yet.</p>
           )}
 
           <form className="checkout-address-form" onSubmit={handleCreateAddress}>
@@ -194,7 +207,9 @@ export default function CheckoutPage() {
               required
             />
 
-            <button type="submit">Save address</button>
+            <button type="submit" className="checkout-address-form__submit">
+              Save address
+            </button>
           </form>
         </div>
 
@@ -204,15 +219,22 @@ export default function CheckoutPage() {
           <div className="checkout-items">
             {cartData.cartItems.map((cartItem) => (
               <div key={cartItem.id} className="checkout-item">
-                <p>{cartItem.item.name}</p>
-                <p>{cartItem.quantity} × {cartItem.item.price} RSD</p>
+                <p className="checkout-item__name">{cartItem.item.name}</p>
+                <p className="checkout-item__value">
+                  {cartItem.quantity} × {cartItem.item.price} RSD
+                </p>
               </div>
             ))}
           </div>
 
-          <h3>Total: {total} RSD</h3>
+          <h3 className="checkout-total">Total: {total} RSD</h3>
 
-          <button onClick={handleCheckout} disabled={submitting}>
+          <button
+            type="button"
+            className="checkout-submit-btn"
+            onClick={handleCheckout}
+            disabled={submitting}
+          >
             {submitting ? "Processing..." : "Proceed to Payment"}
           </button>
         </div>

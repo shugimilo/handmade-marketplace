@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../api/authApi";
 
+import "../styles/AuthPage.css";
+import "../styles/Feedback.css";
+
 export default function RegisterPage() {
   const navigate = useNavigate();
 
@@ -69,7 +72,7 @@ export default function RegisterPage() {
           required
         />
 
-        {error && <p className="auth-error">{error}</p>}
+        {error && <p className="error-message">{error}</p>}
 
         <button type="submit" disabled={loading}>
           {loading ? "Registering..." : "Register"}

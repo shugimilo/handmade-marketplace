@@ -8,6 +8,9 @@ import {
   deleteItemImage
 } from "../api/itemsApi";
 
+import "../styles/EditItemPage.css"
+import formatCategoryName from "../utils/categoryName";
+
 export default function EditItemPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -234,7 +237,7 @@ export default function EditItemPage() {
                   checked={formData.categories.includes(category.id)}
                   onChange={() => handleCategoryChange(category.id)}
                 />
-                {category.name}
+                {formatCategoryName(category.name)}
               </label>
             ))}
           </div>
