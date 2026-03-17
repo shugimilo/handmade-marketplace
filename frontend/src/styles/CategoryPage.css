@@ -15,3 +15,49 @@
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
 }
+
+.category-page__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.category-page__count {
+  margin: 8px 0 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--color-text-soft);
+}
+
+.category-page__sort {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-ui);
+}
+
+.category-page__sort label {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.category-page__sort select {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.category-page__status {
+  font-family: var(--font-body);
+  color: var(--color-text-soft);
+}

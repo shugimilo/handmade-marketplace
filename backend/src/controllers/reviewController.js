@@ -51,15 +51,11 @@ export async function createReview(req, res) {
 }
 
 export async function deleteReview(req, res) {
-    const userId = Number(req.userId)
     const reviewId = Number(req.params.id)
 
     try {
         const deletedReview = await prisma.review.deleteMany({
-            where: {
-                reviewerId: userId,
-                id: reviewId
-            }
+            where: { id: reviewId }
         })
 
         if (deletedReview.count === 0) {

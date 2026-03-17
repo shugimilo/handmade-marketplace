@@ -20,7 +20,18 @@ export async function getCategoryItems(req, res) {
     const id = Number(req.params.id)
     const page = Number(req.query.page) || 1
     const limit = Number(req.query.limit) || 12
+    const sort = req.query.sort || "newest"
     const skip = (page - 1) * limit
+
+    let orderBy
+
+    if (sort === "price_asc") {
+        orderBy = { price: "asc" }
+    } else if (sort === "price_desc") {
+        orderBy = { price: "desc" }
+    } else {
+        orderBy = { id: "desc" }
+    }
 
     try {
         const category = await prisma.category.findUnique({
@@ -35,23 +46,22 @@ export async function getCategoryItems(req, res) {
             return res.status(404).json({ message: "Category not found" })
         }
 
+        const whereClause = {
+            categories: {
+                some: { id }
+            }
+        }
+
         const [items, totalItems] = await Promise.all([
             prisma.item.findMany({
-                where: {
-                    categories: {
-                        some: { id }
-                    }
-                },
+                where: whereClause,
                 select: basicItemInfo,
+                orderBy,
                 skip,
                 take: limit
             }),
             prisma.item.count({
-                where: {
-                    categories: {
-                        some: { id }
-                    }
-                }
+                where: whereClause
             })
         ])
 

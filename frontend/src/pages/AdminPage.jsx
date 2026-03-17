@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   getAdminUsers,
   deleteAdminUser,
+  deleteAdminReview,
   getAdminItems,
   deleteAdminItem,
   getAdminOrders,
@@ -93,6 +94,19 @@ export default function AdminPage() {
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.message || "Failed to delete item.");
+    }
+  };
+
+    const handleDeleteReview = async (reviewId) => {
+    const confirmed = window.confirm("Delete this review?");
+    if (!confirmed) return;
+
+    try {
+      await deleteAdminReview(reviewId);
+      await loadTabData();
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || "Failed to delete review.");
     }
   };
 
@@ -236,6 +250,7 @@ export default function AdminPage() {
                 <th>Rating</th>
                 <th>Comment</th>
                 <th>Date</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -250,6 +265,11 @@ export default function AdminPage() {
                     {review.reviewedOn
                       ? new Date(review.reviewedOn).toLocaleDateString()
                       : "-"}
+                  </td>
+                  <td>
+                    <button onClick={() => handleDeleteReview(review.id)}>
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}

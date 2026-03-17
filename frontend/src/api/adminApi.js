@@ -29,3 +29,8 @@ export const getAdminReviews = async (page = 1, limit = 20) => {
   const res = await api.get(`/reviews?page=${page}&limit=${limit}`);
   return res.data;
 };
+
+export const deleteAdminReview = async (reviewId) => {
+  const res = await api.delete(`/reviews/${reviewId}`);
+  return res.data;
+}
