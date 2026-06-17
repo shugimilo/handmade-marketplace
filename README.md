@@ -284,7 +284,7 @@ This project provided practical experience with:
 
 ## Author
 
-**Pavle Milićević**
+**Petar Milojević**
 
 Computer Science & Software Engineering Student
 
